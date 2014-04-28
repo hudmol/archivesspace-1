@@ -13,7 +13,9 @@ module RelatedAgents
                              },
                              :class_callback => callback)
 
-    base.extend(ClassMethods)
+    base.include(DirectionalRelationships)
+
+    base.define_directional_relationship(:property => 'related_agents')
   end
 
 
@@ -59,73 +61,5 @@ module RelatedAgents
       end
     end
   end
-
-
-  def self.prepare_related_agents_for_storage(json)
-    Array(json['related_agents']).each do |relationship|
-      # Relationships are directionless by default, but related agent
-      # relationships actually have a direction (e.g. A is a child of B)
-      #
-      # We store the URI that is the subject of this relationship as a separate
-      # property to preserve this direction.
-      #
-      relationship['relationship_target'] = relationship['ref']
-    end
-  end
-
-
-  def self.prepare_related_agents_for_display(json)
-    Array(json['related_agents']).each do |relationship|
-      if relationship['relationship_target'] == json.uri
-        # This means we're looking at the relationship from the other side.
-        #
-        # For example, if the relationship is "A is a parent of B", then we
-        # want:
-        #
-        #   * 'GET A' to yield  {relator => 'is_parent_of', ref => 'B'}
-        #   * 'GET B' to yield  {relator => 'is_child_of', ref => 'A'}
-        #
-        # So we want to invert the relator for this case.
-
-        relator_values = JSONModel.enum_values(JSONModel(relationship['jsonmodel_type'].intern).schema['properties']['relator']['dynamic_enum'])
-        relator_values -= ['other_unmapped'] # grumble.
-
-        if relator_values.length == 2
-          # When there are two possible values we assume they're inverses
-          # Set the relator to whatever the inverse of the current one is.
-          relationship['relator'] = (relator_values - [relationship['relator']]).first
-        end
-      end
-    end
-  end
-
-
-  def update_from_json(json, opts = {}, apply_nested_records = true)
-    RelatedAgents.prepare_related_agents_for_storage(json)
-    super
-  end
-
-
-  module ClassMethods
-
-    def create_from_json(json, opts = {})
-      RelatedAgents.prepare_related_agents_for_storage(json)
-      super
-    end
-
-
-    def sequel_to_jsonmodel(objs, opts = {})
-      jsons = super
-
-      jsons.zip(objs).each do |json, obj|
-        RelatedAgents.prepare_related_agents_for_display(json)
-      end
-
-      jsons
-    end
-
-  end
-
-
 
 end
