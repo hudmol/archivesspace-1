@@ -25,6 +25,11 @@
 
       "provenance" => {"type" => "string", "maxLength" => 65000},
 
+      "parts" => {
+        "type" => "array",
+        "items" => {"type" => "JSONModel(:accession_parts_relationship) object"},
+      },
+
       "accession_date" => {"type" => "date", "minLength" => 1, "ifmissing" => "error"},
 
       "publish" => {"type" => "boolean"},

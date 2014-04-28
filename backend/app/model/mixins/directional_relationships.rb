@@ -59,7 +59,7 @@ module DirectionalRelationships
 
 
     def prepare_directional_relationship_for_storage(json)
-      directional_relationships.each do |rel|
+      Array(directional_relationships).each do |rel|
         property = rel[:json_property]
 
         Array(json[property]).each do |relationship|
@@ -77,7 +77,7 @@ module DirectionalRelationships
 
 
     def prepare_directional_relationship_for_display(json)
-      directional_relationships.each do |rel|
+      Array(directional_relationships).each do |rel|
         property = rel[:json_property]
 
         Array(json[property]).each do |relationship|
