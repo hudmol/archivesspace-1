@@ -1334,6 +1334,7 @@ en:
       novalue: No value defined
     user_defined_enum_4:
       novalue: No value defined
+
   enumeration_names:
     accession_acquisition_type: Accession Acquisition Type
     accession_resource_type: Accession Resource Type
@@ -1393,3 +1394,7 @@ en:
     user_defined_enum_2: User Defined Enum 2
     user_defined_enum_3: User Defined Enum 3
     user_defined_enum_4: User Defined Enum 4
+    field_query_field: Advanced Search Text Fields (Public)
+    staff_field_query_field: Advanced Search Text Fields (Staff)
+    boolean_field_query_field: Advanced Search Boolean Fields
+    date_field_query_field: Advanced Search Date Fields

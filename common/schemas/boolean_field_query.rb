@@ -5,9 +5,8 @@
     "type" => "object",
     "properties" => {
 
-      "negated" => {"type" => "boolean", "default" => false},
       "field" => {"type" => "string", "ifmissing" => "error"},
-      "value" => {"type" => "string", "ifmissing" => "error"},
+      "value" => {"type" => "boolean", "ifmissing" => "error"},
 
     },
   },

@@ -1,6 +1,6 @@
 require 'uri'
 require 'net/http'
-
+require 'advanced_search'
 
 class Solr
 
@@ -50,11 +50,21 @@ class Solr
         "(#{subqueries})"
       else
         prefix = advanced_query['negated'] ? "-" : ""
+        field = AdvancedSearch.solr_field_for(advanced_query['field'])
 
-        field = advanced_query['field']
-        value = advanced_query['value']
+        if advanced_query["jsonmodel_type"] == "date_field_query"
+          if advanced_query["comparator"] == "lesser_than"
+            value = "[* TO #{advanced_query["value"]}T00:00:00Z-1MILLISECOND]"
+          elsif advanced_query["comparator"] == "greater_than"
+            value = "[#{advanced_query["value"]}T00:00:00Z+1DAY TO *]"
+          else # advanced_query["comparator"] == "equal"
+            value = "[#{advanced_query["value"]}T00:00:00Z TO #{advanced_query["value"]}T00:00:00Z+1DAY-1MILLISECOND]"
+          end
+        else
+          value = "(#{advanced_query['value']})"
+        end
 
-        "#{prefix}#{field}:(#{value})"
+        "#{prefix}#{field}:#{value}"
       end
     end
 

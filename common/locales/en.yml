@@ -1827,3 +1827,22 @@ en:
     time_finished: Time Completed
     owner: Owner
     filenames: Import Files
+
+  advanced_search:
+    type:
+      text: Text
+      date: Date
+      boolean: Boolean
+      controlled_value: Controlled Value
+    text:
+      keyword: Keyword
+      title: Title
+      creators: Creator
+      notes: Notes
+      subjects: Subject
+    boolean:
+      published: Published?
+      suppressed: Suppressed?
+    date:
+      create_time: Created
+      user_mtime: Updated
