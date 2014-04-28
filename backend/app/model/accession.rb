@@ -34,12 +34,8 @@ class Accession < Sequel::Model(:accession)
                       :contains_references_to_types => proc {[Resource]})
 
 
-  define_directional_relationship(:name => :accession_part,
-                                  :json_property => 'parts',
-                                  :contains_references_to_types => proc {[Accession]})
-
-  define_directional_relationship(:name => :accession_bound,
-                                  :json_property => 'bound_with',
+  define_directional_relationship(:name => :related_accession,
+                                  :json_property => 'related_accessions',
                                   :contains_references_to_types => proc {[Accession]})
 
 

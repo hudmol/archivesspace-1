@@ -323,11 +323,11 @@ describe 'Accession model' do
     children = 3.times.map {
       rlshp = JSONModel(:accession_parts_relationship).from_hash('relator' => 'forms_part_of',
                                                                  'ref' => parent.uri)
-      create_accession('parts' => [rlshp.to_hash])
+      create_accession('related_accessions' => [rlshp.to_hash])
     }
 
     # Relationship can be seen from the parent
-    parts_parent = Accession.to_jsonmodel(parent.id)['parts']
+    parts_parent = Accession.to_jsonmodel(parent.id)['related_accessions']
 
     parts_parent.length.should eq(3)
     parts_parent.map {|p| p['relator']}.uniq.should eq(['has_part'])
@@ -335,7 +335,7 @@ describe 'Accession model' do
 
     # And from the children
     children.each do |child|
-      parts_child = Accession.to_jsonmodel(child.id)['parts']
+      parts_child = Accession.to_jsonmodel(child.id)['related_accessions']
 
       parts_child.length.should eq(1)
       parts_child.map {|p| p['relator']}.uniq.should eq(['forms_part_of'])
@@ -350,10 +350,10 @@ describe 'Accession model' do
     rlshp = JSONModel(:accession_bound_relationship).from_hash('relator' => 'bound_with',
                                                                'ref' => ernie.uri)
 
-    bert = create_accession('bound_with' => [rlshp.to_hash])
+    bert = create_accession('related_accessions' => [rlshp.to_hash])
 
-    Accession.to_jsonmodel(ernie.id)['bound_with'].first['ref'].should eq(bert.uri)
-    Accession.to_jsonmodel(bert.id)['bound_with'].first['ref'].should eq(ernie.uri)
+    Accession.to_jsonmodel(ernie.id)['related_accessions'].first['ref'].should eq(bert.uri)
+    Accession.to_jsonmodel(bert.id)['related_accessions'].first['ref'].should eq(ernie.uri)
   end
 
 end

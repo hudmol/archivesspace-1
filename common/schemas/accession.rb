@@ -25,15 +25,10 @@
 
       "provenance" => {"type" => "string", "maxLength" => 65000},
 
-      "parts" => {
+      "related_accessions" => {
         "type" => "array",
-        "items" => {"type" => "JSONModel(:accession_parts_relationship) object"},
-      },
-
-
-      "bound_with" => {
-        "type" => "array",
-        "items" => {"type" => "JSONModel(:accession_bound_relationship) object"},
+        "items" => {"type" => [{"type" => "JSONModel(:accession_parts_relationship) object"},
+                               {"type" => "JSONModel(:accession_bound_relationship) object"}]},
       },
 
 
