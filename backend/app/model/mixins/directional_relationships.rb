@@ -1,13 +1,42 @@
-# Support for storing a relationship between two records where the direction of
-# the relationship matters.
+require_relative 'relationships'
+
+# This extends regular relationships to add support for storing a relationship
+# between two records where the direction of the relationship matters.  For
+# example, a relationship between two agents might be called "is_parent_of" when
+# viewed from one side, and "is_child_of" when viewed from the other.
 #
-# For example, a relationship between two agents might be called "isParentOf"
-# when viewed from one side, and "isChildOf" when viewed from the other.
+# Directional relationships are just relationships with some extra
+# characteristics:
+#
+#  * In the database, we store 'relationship_target_record_type' and
+#    'relationship_target_id'.  These contain the type and identifier of the
+#    record that is the subject of this relationship.  If the relationship is:
+#
+#     A is_parent_of B
+#
+#    Then these two columns will contain a reference to record B.  This
+#    information is used to store the direction of the relationship.
+#
+#  * We also store 'jsonmodel_type' in the database for the relationship, since
+#    there can be multiple relationship record types corresponding to a single
+#    logical relationship (the related_agent relationship uses this feature)
+#
+#  * The 'relator' property describes the nature of the relationship.  This
+#    should be an enum containing either one or two values.  If it's one value,
+#    the relator will be the same whether you look at the relationship from
+#    record A or record B (a relator like "sibling" would make sense for this
+#    case).
+#
+#    If there are two relator values, they should be logical inverses.  If you
+#    fetch record A you might see a relator of "is_parent_of" for its
+#    relationship.  Fetch record B and the same relationship might show a
+#    relator of "is_child_of"--the relator is automatically mapped based on which
+#    direction you're traversing the relationship in.
 
 module DirectionalRelationships
 
-
   def self.included(base)
+    base.include(Relationships)
     base.extend(ClassMethods)
   end
 
@@ -23,6 +52,7 @@ module DirectionalRelationships
     attr_reader :directional_relationships
 
     def define_directional_relationship(opts)
+      self.define_relationship(opts)
       @directional_relationships ||= []
       @directional_relationships << opts
     end
@@ -30,7 +60,7 @@ module DirectionalRelationships
 
     def prepare_directional_relationship_for_storage(json)
       directional_relationships.each do |rel|
-        property = rel[:property]
+        property = rel[:json_property]
 
         Array(json[property]).each do |relationship|
           # Relationships are directionless by default, but here we want to
@@ -48,7 +78,7 @@ module DirectionalRelationships
 
     def prepare_directional_relationship_for_display(json)
       directional_relationships.each do |rel|
-        property = rel[:property]
+        property = rel[:json_property]
 
         Array(json[property]).each do |relationship|
           ref = JSONModel.parse_reference(json.uri)

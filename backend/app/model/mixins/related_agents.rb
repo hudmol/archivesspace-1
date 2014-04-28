@@ -6,16 +6,14 @@ module RelatedAgents
   def self.included(base)
     callback = proc { |clz| RelatedAgents.set_up_date_record_handling(clz) }
 
-    base.define_relationship(:name => :related_agents,
-                             :json_property => 'related_agents',
-                             :contains_references_to_types => proc {
-                               AgentManager.registered_agents.map {|a| a[:model]}
-                             },
-                             :class_callback => callback)
-
     base.include(DirectionalRelationships)
 
-    base.define_directional_relationship(:property => 'related_agents')
+    base.define_directional_relationship(:name => :related_agents,
+                                         :json_property => 'related_agents',
+                                         :contains_references_to_types => proc {
+                                           AgentManager.registered_agents.map {|a| a[:model]}
+                                         },
+                                         :class_callback => callback)
   end
 
 
