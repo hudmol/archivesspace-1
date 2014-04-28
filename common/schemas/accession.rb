@@ -30,6 +30,13 @@
         "items" => {"type" => "JSONModel(:accession_parts_relationship) object"},
       },
 
+
+      "bound_with" => {
+        "type" => "array",
+        "items" => {"type" => "JSONModel(:accession_bound_relationship) object"},
+      },
+
+
       "accession_date" => {"type" => "date", "minLength" => 1, "ifmissing" => "error"},
 
       "publish" => {"type" => "boolean"},

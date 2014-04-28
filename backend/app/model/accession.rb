@@ -38,6 +38,10 @@ class Accession < Sequel::Model(:accession)
                                   :json_property => 'parts',
                                   :contains_references_to_types => proc {[Accession]})
 
+  define_directional_relationship(:name => :accession_bound,
+                                  :json_property => 'bound_with',
+                                  :contains_references_to_types => proc {[Accession]})
+
 
   auto_generate :property => :display_string,
                 :generator => lambda { |json|

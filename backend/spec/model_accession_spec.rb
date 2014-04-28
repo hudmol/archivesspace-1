@@ -343,4 +343,17 @@ describe 'Accession model' do
     end
   end
 
+
+  it "can bind two accessions together in a bound_with relationship" do
+    ernie = create_accession
+
+    rlshp = JSONModel(:accession_bound_relationship).from_hash('relator' => 'bound_with',
+                                                               'ref' => ernie.uri)
+
+    bert = create_accession('bound_with' => [rlshp.to_hash])
+
+    Accession.to_jsonmodel(ernie.id)['bound_with'].first['ref'].should eq(bert.uri)
+    Accession.to_jsonmodel(bert.id)['bound_with'].first['ref'].should eq(ernie.uri)
+  end
+
 end
