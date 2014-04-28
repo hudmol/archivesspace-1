@@ -36,10 +36,11 @@ module DirectionalRelationships
           # Relationships are directionless by default, but here we want to
           # store a direction (e.g. A is a child of B)
           #
-          # We store the URI that is the subject of this relationship as a separate
-          # property to preserve this direction.
+          # Store the JSONModel type and ID
           #
-          relationship['relationship_target'] = relationship['ref']
+          ref = JSONModel.parse_reference(relationship['ref'])
+          relationship['relationship_target_record_type'] = ref[:type]
+          relationship['relationship_target_id'] = ref[:id].to_i
         end
       end
     end
@@ -50,7 +51,10 @@ module DirectionalRelationships
         property = rel[:property]
 
         Array(json[property]).each do |relationship|
-          if relationship['relationship_target'] == json.uri
+          ref = JSONModel.parse_reference(json.uri)
+
+          if (relationship['relationship_target_record_type'] == ref[:type] &&
+              relationship['relationship_target_id'] == ref[:id].to_i)
             # This means we're looking at the relationship from the other side.
             #
             # For example, if the relationship is "A is a parent of B", then we
@@ -93,7 +97,6 @@ module DirectionalRelationships
     end
 
   end
-
 
 
 end
