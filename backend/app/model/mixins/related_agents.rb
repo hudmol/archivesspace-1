@@ -1,50 +1,10 @@
+require_relative 'directional_relationships'
+
 module RelatedAgents
   extend JSONModel
 
   def self.included(base)
-    callback = proc { |clz|
-
-      clz.instance_eval do
-        extend JSONModel
-        one_to_one :relationship_date, :class => "ASDate", :key => :related_agents_rlshp_id
-
-        include ASModel::SequelHooks
-
-        def self.create(values)
-          date_values = values.delete('dates')
-          obj = super
-
-          if date_values
-            date = ASDate.create_from_json(JSONModel(:date).from_hash(date_values))
-            obj.relationship_date = date
-            obj.save
-          end
-
-          obj
-        end
-
-
-        alias_method :delete_orig, :delete
-        define_method(:delete) do
-          relationship_date.delete if relationship_date
-          delete_orig
-        end
-
-
-        alias_method :values_orig, :values
-        define_method(:values) do
-          result = values_orig
-
-          if self.relationship_date
-            result['dates'] = ASDate.to_jsonmodel(self.relationship_date).to_hash
-          end
-
-          result
-        end
-      end
-
-    }
-
+    callback = proc { |clz| RelatedAgents.set_up_date_record_handling(clz) }
 
     base.define_relationship(:name => :related_agents,
                              :json_property => 'related_agents',
@@ -54,6 +14,50 @@ module RelatedAgents
                              :class_callback => callback)
 
     base.extend(ClassMethods)
+  end
+
+
+  # When saving/loading this relationship, link up and fetch a nested date
+  # record to capture the dates.
+  def self.set_up_date_record_handling(relationship_clz)
+    relationship_clz.instance_eval do
+      extend JSONModel
+      one_to_one :relationship_date, :class => "ASDate", :key => :related_agents_rlshp_id
+
+      include ASModel::SequelHooks
+
+      def self.create(values)
+        date_values = values.delete('dates')
+        obj = super
+
+        if date_values
+          date = ASDate.create_from_json(JSONModel(:date).from_hash(date_values))
+          obj.relationship_date = date
+          obj.save
+        end
+
+        obj
+      end
+
+
+      alias_method :delete_orig, :delete
+      define_method(:delete) do
+        relationship_date.delete if relationship_date
+        delete_orig
+      end
+
+
+      alias_method :values_orig, :values
+      define_method(:values) do
+        result = values_orig
+
+        if self.relationship_date
+          result['dates'] = ASDate.to_jsonmodel(self.relationship_date).to_hash
+        end
+
+        result
+      end
+    end
   end
 
 
