@@ -23,6 +23,10 @@ class Resource < JSONModel(:resource)
                                                           hash
                                                         }])
 
+    # We'll replace this with our own relationship, linking us back to the
+    # accession we were spawned from.
+    values.delete('related_accessions')
+
     notes ||= []
 
     if accession.content_description
