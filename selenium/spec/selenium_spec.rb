@@ -1038,6 +1038,34 @@ describe "ArchivesSpace user interface" do
     end
 
 
+    it "can create an accession which is linked to another accession" do
+      $driver.find_element(:link, "Create").click
+      $driver.find_element(:link, "Accession").click
+
+      # populate mandatory fields
+      $driver.clear_and_send_keys([:id, "accession_title_"], "linked_accession_#{@me}")
+
+      $driver.complete_4part_id("accession_id_%d_")
+
+      $driver.find_element(:css, "#accession_related_accessions_ .btn").click
+
+      $driver.find_element(:class, "related-accession-type").select_option('accession_parts_relationship')
+
+      token_input = $driver.find_element(:id, "token-input-accession_related_accessions__0__ref_")
+      token_input.clear
+      token_input.click
+      token_input.send_keys(@accession_title)
+      $driver.find_element(:css, "li.token-input-dropdown-item2").click
+
+      $driver.click_and_wait_until_gone(:css => "form .record-pane button[type='submit']")
+
+      $driver.find_element(:link, "linked_accession_#{@me}").click
+
+      $driver.find_element_with_text('//td', /Forms Part of/)
+      $driver.find_element_with_text('//td', /#{@accession_title}/)
+    end
+
+
     it "can show a browse list of Accessions" do
       run_index_round
 

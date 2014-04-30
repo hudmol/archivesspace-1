@@ -1313,6 +1313,11 @@ en:
     agent_relationship_parentchild_relator:
       is_child_of: Child of Related
       is_parent_of: Parent of Related
+    accession_bound_relator:
+      bound_with: Bound with
+    accession_parts_relator:
+      forms_part_of: Forms Part of
+      has_part: Has Part
     agent_relationship_subordinatesuperior_relator:
       is_subordinate_to: Is Subordinate to Related
       is_superior_of: Is Superior of Related
