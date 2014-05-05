@@ -12,18 +12,16 @@
         <thead>
           <tr>
             <td><%= I18n.t("accession.relator") %></td>
-            <td><%= I18n.t("accession.id_0") %></td>
-            <td><%= I18n.t("accession.title") %></td>
+            <td><%= I18n.t("accession._singular") %></td>
           </tr>
         </thead>
         <tbody>
           <% related_accessions.each_with_index do | accession, index | %>
             <tr>
               <td><%= I18n.t("#{accession['jsonmodel_type']}.#{accession['relator']}") %></td>
-              <td><%= (0..3).map{|i| accession["_resolved"]["id_#{i}"]}.compact.join("-") %></td>
               <td>
                 <%= render_token :object => accession["_resolved"],
-                                 :label => accession["_resolved"]["title"],
+                                 :label => accession["_resolved"]["display_string"],
                                  :type => "accession",
                                  :uri => accession["ref"] %>
               </td>
