@@ -38,6 +38,9 @@
                 </a>
                 <ul class="dropdown-menu open-aligned-right">
                   <li>
+                    <%= link_to "<span class='icon-accession'></span> #{I18n.t("accession._singular")}".html_safe, :controller => :accessions, :action => :new, :accession_id => @accession.id %>
+                  </li>
+                  <li>
                     <%= link_to "<span class='icon-resource'></span> #{I18n.t("resource._singular")}".html_safe, :controller => :resources, :action => :new, :accession_id => @accession.id %>
                   </li>
                 </ul>

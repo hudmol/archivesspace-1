@@ -19,4 +19,35 @@ class Accession < JSONModel(:accession)
     
     ref_id
   end
+
+
+  def populate_from_accession(accession)
+    values = accession.to_hash(:raw)
+
+    # Recursively remove bits that don't make sense to copy (like "lock_version" properties)
+    values = JSONSchemaUtils.map_hash_with_schema(values, JSONModel(:accession).schema,
+                                                  [proc { |hash, schema|
+                                                          hash = hash.clone
+                                                     hash.delete_if {|k, v| k.to_s =~ /^(id_[0-9]|lock_version)$/}
+                                                          hash
+                                                   }])
+
+    values.delete('id_0')
+    values.delete('id_1')
+    values.delete('id_2')
+    values.delete('id_3')
+    values.delete('linked_events')
+    values.delete('external_ids')
+    values.delete('related_accessions')
+    values.delete('related_resources')
+    values.delete('external_documents')
+    values.delete('rights_statements')
+    values.delete('instances')
+    values.delete('deaccessions')
+    values.delete('collection_management')
+    values.delete('classification')
+
+    self.update(values)
+  end
+
 end

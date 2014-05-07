@@ -21,7 +21,18 @@ class AccessionsController < ApplicationController
 
   def new
     @accession = Accession.new({:accession_date => Date.today.strftime('%Y-%m-%d')})._always_valid!
+
+    if params[:accession_id]
+      acc = Accession.find(params[:accession_id], find_opts)
+
+      if acc
+        @accession.populate_from_accession(acc)
+        flash.now[:info] = I18n.t("accession._frontend.messages.spawned", JSONModelI18nWrapper.new(:accession => acc))
+        flash[:spawned_from_accession] = acc.id
+      end
+    end
   end
+
 
   def edit
     @accession = fetch_resolved(params[:id])
