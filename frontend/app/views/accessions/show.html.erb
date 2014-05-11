@@ -60,7 +60,7 @@
          <% end %>
            
          <% if @accession.related_accessions.length > 0 %>
-           <%= render_aspace_partial :partial => "interrelated_accessions/show", :locals => { :related_accessions => @accession.related_accessions, :section_id => "interrelated_accessions_" } %>
+           <%= render_aspace_partial :partial => "interrelated_accessions/show", :locals => { :related_accessions => @accession.related_accessions, :section_id => "accession_related_accessions_" } %>
          <% end %>
 
          <% if not @accession.subjects.blank? %>
