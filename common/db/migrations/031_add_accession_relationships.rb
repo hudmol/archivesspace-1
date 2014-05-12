@@ -4,7 +4,10 @@ Sequel.migration do
 
   up do
     create_enum("accession_parts_relator", ["has_part", "forms_part_of"])
+    create_editable_enum("accession_parts_relator_type", ["part"])
+
     create_enum("accession_sibling_relator", ["sibling_of"])
+    create_editable_enum("accession_sibling_relator_type", ["bound_with"])
 
     create_table(:related_accession_rlshp) do
       primary_key :id
@@ -14,7 +17,8 @@ Sequel.migration do
 
       Integer :suppressed, :null => false, :default => 0
 
-      String :relator, :null => false
+      DynamicEnum :relator_id, :null => false
+      DynamicEnum :relator_type_id, :null => false
       String :relationship_target_record_type, :null => false
       Integer :relationship_target_id, :null => false
       String :jsonmodel_type, :null => false

@@ -1159,6 +1159,7 @@ en:
     related_resources_tooltip: |
         <p>Used for linking associated Resources with this Accession.</p>
     relator: Relator
+    relator_type: Relator Type
     _singular: Accession
     _plural: Accessions
 
@@ -1170,12 +1171,16 @@ en:
     _singular: Sibling Relationship
     relator: This Accession
     sibling_of: Sibling of
+    relator_type: Relator Type
+    bound_with: "\"Bound with\" Relationship"
 
   accession_parts_relationship:
     _singular: "\"Part of\" Relationship"
+    part: "\"Part of\" Relationship"
     relator: This Accession
     forms_part_of: Forms Part of
     has_part: Has Part
+    relator_type: Relator Type
 
 
   agent: &agent_attributes

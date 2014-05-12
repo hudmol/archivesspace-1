@@ -322,6 +322,7 @@ describe 'Accession model' do
 
     children = 3.times.map {
       rlshp = JSONModel(:accession_parts_relationship).from_hash('relator' => 'forms_part_of',
+                                                                 'relator_type' => 'part',
                                                                  'ref' => parent.uri)
       create_accession('related_accessions' => [rlshp.to_hash])
     }
@@ -348,6 +349,7 @@ describe 'Accession model' do
     ernie = create_accession
 
     rlshp = JSONModel(:accession_sibling_relationship).from_hash('relator' => 'sibling_of',
+                                                                 'relator_type' => 'bound_with',
                                                                  'ref' => ernie.uri)
 
     bert = create_accession('related_accessions' => [rlshp.to_hash])

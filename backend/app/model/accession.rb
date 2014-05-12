@@ -36,7 +36,20 @@ class Accession < Sequel::Model(:accession)
 
   define_directional_relationship(:name => :related_accession,
                                   :json_property => 'related_accessions',
-                                  :contains_references_to_types => proc {[Accession]})
+                                  :contains_references_to_types => proc {[Accession]},
+                                  :class_callback => proc {|clz|
+                                    clz.instance_eval do
+                                      include DynamicEnums
+                                      uses_enums({
+                                                   :property => 'relator',
+                                                   :uses_enum => ['accession_parts_relator', 'accession_sibling_relator']
+                                                 },
+                                                 {
+                                                   :property => 'relator_type',
+                                                   :uses_enum => ['accession_parts_relator_type', 'accession_sibling_relator_type']
+                                                 })
+                                    end
+                                  })
 
 
   auto_generate :property => :display_string,

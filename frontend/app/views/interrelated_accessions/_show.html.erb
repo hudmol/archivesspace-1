@@ -12,6 +12,7 @@
         <thead>
           <tr>
             <td><%= I18n.t("accession.relator") %></td>
+            <td><%= I18n.t("accession.relator_type") %></td>
             <td><%= I18n.t("accession._singular") %></td>
           </tr>
         </thead>
@@ -19,6 +20,7 @@
           <% related_accessions.each_with_index do | accession, index | %>
             <tr>
               <td><%= I18n.t("#{accession['jsonmodel_type']}.#{accession['relator']}") %></td>
+              <td><%= I18n.t("#{accession['jsonmodel_type']}.#{accession['relator_type']}") %></td>
               <td>
                 <%= render_token :object => accession["_resolved"],
                                  :label => accession["_resolved"]["display_string"],

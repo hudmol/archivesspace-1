@@ -1318,6 +1318,10 @@ en:
     accession_parts_relator:
       forms_part_of: Forms Part of
       has_part: Has Part
+    accession_parts_relator_type:
+      part: "\"Part\" relationship"
+    accession_sibling_relator_type:
+      bound_with: "\"Bound With\" relationship"
     agent_relationship_subordinatesuperior_relator:
       is_subordinate_to: Is Subordinate to Related
       is_superior_of: Is Superior of Related
@@ -1342,7 +1346,9 @@ en:
   enumeration_names:
     accession_acquisition_type: Accession Acquisition Type
     accession_parts_relator: Accession Parts Relator
+    accession_parts_relator_type: Accession Parts Relator Type
     accession_sibling_relator: "Accession Sibling Relator"
+    accession_sibling_relator_type: Accession Sibling Relator Type
     accession_resource_type: Accession Resource Type
     agent_contact_salutation: Agent Contact Salutation
     agent_relationship_associative_relator: Agent Relationship Associative Relator

@@ -11,6 +11,12 @@
         "ifmissing" => "error"
       },
 
+      "relator_type" => {
+        "type" => "string",
+        "dynamic_enum" => "accession_sibling_relator_type",
+        "ifmissing" => "error"
+      },
+
       "ref" => {
         "type" => "JSONModel(:accession) uri",
         "ifmissing" => "error"
