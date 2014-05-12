@@ -344,11 +344,11 @@ describe 'Accession model' do
   end
 
 
-  it "can bind two accessions together in a bound_with relationship" do
+  it "can bind two accessions together in a sibling relationship" do
     ernie = create_accession
 
-    rlshp = JSONModel(:accession_bound_relationship).from_hash('relator' => 'bound_with',
-                                                               'ref' => ernie.uri)
+    rlshp = JSONModel(:accession_sibling_relationship).from_hash('relator' => 'sibling_of',
+                                                                 'ref' => ernie.uri)
 
     bert = create_accession('related_accessions' => [rlshp.to_hash])
 

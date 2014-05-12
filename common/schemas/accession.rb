@@ -28,7 +28,7 @@
       "related_accessions" => {
         "type" => "array",
         "items" => {"type" => [{"type" => "JSONModel(:accession_parts_relationship) object"},
-                               {"type" => "JSONModel(:accession_bound_relationship) object"}]},
+                               {"type" => "JSONModel(:accession_sibling_relationship) object"}]},
       },
 
 

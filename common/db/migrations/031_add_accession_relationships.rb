@@ -4,7 +4,7 @@ Sequel.migration do
 
   up do
     create_enum("accession_parts_relator", ["has_part", "forms_part_of"])
-    create_enum("accession_bound_relator", ["bound_with"])
+    create_enum("accession_sibling_relator", ["sibling_of"])
 
     create_table(:related_accession_rlshp) do
       primary_key :id

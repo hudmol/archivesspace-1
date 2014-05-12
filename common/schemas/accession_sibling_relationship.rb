@@ -7,7 +7,7 @@
     "properties" => {
       "relator" => {
         "type" => "string",
-        "dynamic_enum" => "accession_bound_relator",
+        "dynamic_enum" => "accession_sibling_relator",
         "ifmissing" => "error"
       },
 

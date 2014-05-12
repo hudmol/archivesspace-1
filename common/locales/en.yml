@@ -1166,10 +1166,10 @@ en:
     _plural: Related Accessions
     relationship_type: Relationship type
 
-  accession_bound_relationship:
-    _singular: "\"Bound with\" Relationship"
+  accession_sibling_relationship:
+    _singular: Sibling Relationship
     relator: This Accession
-    bound_with: Bound with
+    sibling_of: Sibling of
 
   accession_parts_relationship:
     _singular: "\"Part of\" Relationship"
