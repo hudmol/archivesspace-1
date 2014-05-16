@@ -746,18 +746,8 @@ describe "ArchivesSpace user interface" do
       date_headings.length.should eq (1)
 
       # rights and external doc shouldn't
-      begin
-        $driver.find_element_orig(:id, "accession_rights_statements_")
-        true.should_not eq(true)
-      rescue Selenium::WebDriver::Error::NoSuchElementError => e
-        # good!
-      end
-      begin
-        $driver.find_element_orig(:id, "accession_external_documents_")
-        true.should_not eq(true)
-      rescue Selenium::WebDriver::Error::NoSuchElementError => e
-        # good!
-      end
+      $driver.ensure_no_such_element(:id, "accession_rights_statements_")
+      $driver.ensure_no_such_element(:id, "accession_external_documents_")
     end
 
 
