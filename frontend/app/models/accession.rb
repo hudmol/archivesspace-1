@@ -32,6 +32,15 @@ class Accession < JSONModel(:accession)
                                                           hash
                                                    }])
 
+    prepare_for_clone(values)
+
+    self.update(values)
+  end
+
+
+  private
+
+  def prepare_for_clone(values)
     values.delete('linked_events')
     values.delete('external_ids')
     values.delete('related_accessions')
@@ -42,8 +51,6 @@ class Accession < JSONModel(:accession)
     values.delete('deaccessions')
     values.delete('collection_management')
     values.delete('classification')
-
-    self.update(values)
   end
 
 end
