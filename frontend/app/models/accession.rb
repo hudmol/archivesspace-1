@@ -32,10 +32,6 @@ class Accession < JSONModel(:accession)
                                                           hash
                                                    }])
 
-    values.delete('id_0')
-    values.delete('id_1')
-    values.delete('id_2')
-    values.delete('id_3')
     values.delete('linked_events')
     values.delete('external_ids')
     values.delete('related_accessions')
