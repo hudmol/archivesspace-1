@@ -494,6 +494,11 @@ module MarcXMLBaseMap
   end
 
 
+  # this should be called 'build_base_map'
+  # because the extending class calls it
+  # when it is configuring itself, and the 
+  # result may depend on methods defined in
+  # the extending class. 
   def BASE_RECORD_MAP
     {
       :obj => :resource,
