@@ -106,8 +106,16 @@ class ArchivesSpaceService
                       "The ability to manage a given repository",
                       :level => "repository")
 
-    Permission.define("update_archival_record",
-                      "The ability to create and modify the major archival record types: accessions/resources/digital objects/components/collection management",
+    Permission.define("update_accession_record",
+                      "The ability to create and modify accessions records",
+                      :level => "repository")
+
+    Permission.define("update_resource_record",
+                      "The ability to create and modify resources records",
+                      :level => "repository")
+
+    Permission.define("update_digital_object_record",
+                      "The ability to create and modify digital objects records",
                       :level => "repository")
 
     Permission.define("update_event_record",
@@ -178,9 +186,13 @@ class ArchivesSpaceService
                       :implied_by => 'manage_agent_record',
                       :level => "global")
 
+    Permission.define("manage_vocabulary_record",
+                      "The ability to create, modify and delete a vocabulary record",
+                      :level => "repository")
+
     Permission.define("update_vocabulary_record",
                       "The ability to create and modify vocabulary records",
-                      :implied_by => 'update_archival_record',
+                      :implied_by => 'manage_vocabulary_record',
                       :level => "global")
 
     Permission.define("update_location_record",
