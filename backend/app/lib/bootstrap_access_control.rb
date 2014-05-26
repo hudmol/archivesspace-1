@@ -138,7 +138,6 @@ class ArchivesSpaceService
                       "The ability to delete the major archival record types: accessions/resources/digital objects/components/collection management/events",
                       :level => "repository")
 
-
     Permission.define("view_suppressed",
                       "The ability to view suppressed records in a given repository",
                       :level => "repository")
@@ -159,6 +158,10 @@ class ArchivesSpaceService
                       "Track concurrent updates to records",
                       :level => "global",
                       :system => true)
+
+    Permission.define("import_records",
+                      "The ability to initiate an importer job",
+                      :level => "repository")
 
     Permission.define("cancel_importer_job",
                       "The ability to cancel a queued or running importer job",
