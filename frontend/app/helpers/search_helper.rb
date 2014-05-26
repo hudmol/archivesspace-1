@@ -82,7 +82,9 @@ module SearchHelper
     return user_can?('update_classification_record') if ["classification", "classification_term"].include?(record['primary_type'])
     return user_can?('update_agent_record') if Array(record['types']).include?("agent")
 
-    user_can?('update_archival_record')
+    return user_can?('update_accession_record') if record['primary_type'] === "accession"
+    return user_can?('update_resource_record') if ["resource", "archival_object"].include?(record['primary_type'])
+    return user_can?('update_digital_object_record') if ["digital_object", "digital_object_component"].include?(record['primary_type'])
   end
 
 
