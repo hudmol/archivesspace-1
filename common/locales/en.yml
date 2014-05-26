@@ -1319,6 +1319,8 @@ en:
       manage_subject_record: create/update/delete subject records
       manage_agent_record: create/update/delete agent records
       manage_vocabulary_record: create/update/delete vocabulary records
+      import_records: initiate import jobs
+      cancel_importer_job: cancel an import job
     _singular: Group
     _plural: Groups
 
