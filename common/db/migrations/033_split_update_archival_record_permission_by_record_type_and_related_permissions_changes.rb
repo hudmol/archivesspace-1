@@ -6,7 +6,7 @@ Sequel.migration do
     update_archival_record_permission_id = self[:permission].filter(:permission_code => 'update_archival_record').get(:id)
 
     if update_archival_record_permission_id
-
+      $stderr.puts("adding separate permissions for updating major record types")
       update_accession_permission_id = self[:permission].filter(:permission_code => 'update_accession_record').get(:id)
       if update_accession_permission_id.nil?
         update_accession_permission_id = self[:permission].insert(:permission_code => 'update_accession_record',
@@ -43,6 +43,7 @@ Sequel.migration do
                                                                        :user_mtime => Time.now)
       end
 
+      $stderr.puts("adding new permission for running import jobs")
       import_permission_id = self[:permission].filter(:permission_code => 'import_records').get(:id)
       if import_permission_id.nil?
         import_permission_id = self[:permission].insert(:permission_code => 'import_records',
@@ -55,6 +56,7 @@ Sequel.migration do
                                                         :user_mtime => Time.now)
       end
 
+      $stderr.puts("adding permission for managing vocabulary records")
       manage_vocabulary_permission_id = self[:permission].filter(:permission_code => 'manage_vocabulary_record').get(:id)
       if manage_vocabulary_permission_id.nil?
         manage_vocabulary_permission_id = self[:permission].insert(:permission_code => 'manage_vocabulary_record',
@@ -79,6 +81,7 @@ Sequel.migration do
                                                               :user_mtime => Time.now)
       end
 
+      $stderr.puts("updating groups to include the new permssions")
       update_archival_record_group_ids = self[:group_permission].filter(:permission_id => [delete_archival_record_permission_id, update_archival_record_permission_id]).select(:group_id).map {|row| row[:group_id]}.uniq
       update_archival_record_group_ids.each do |group_id|
         self[:group_permission].insert(:permission_id => update_accession_permission_id,
@@ -98,6 +101,7 @@ Sequel.migration do
         end
       end
 
+      $stderr.puts("deleting update_archival_record permission")
       self[:group_permission].delete(:permission_id => update_archival_record_permission_id)
       self[:permission].delete(:permission_id => update_archival_record_permission_id)
     end
