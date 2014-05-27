@@ -44,7 +44,11 @@
                     <% if user_can?('update_digital_object_record') %>
                       <li><%= link_to I18n.t("digital_object._singular"), :controller => :digital_objects, :action => :new %></li>
                     <% end %>
-                    <li class="divider"></li>
+
+                    <% if ['update_subject_record', 'update_event_record',
+                           'update_agent_record', 'update_location_record'].find {|p| user_can?(p)} %>
+                      <li class="divider"></li>
+                    <% end %>
                   <% end %>
                   <% if user_can?('update_subject_record') %>
                     <li><%= link_to I18n.t("subject._singular"), :controller => :subjects, :action => :new %></li>
