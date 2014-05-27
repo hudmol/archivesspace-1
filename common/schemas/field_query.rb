@@ -9,6 +9,7 @@
       "field" => {"type" => "string", "ifmissing" => "error"},
       "value" => {"type" => "string", "ifmissing" => "error"},
 
+      "literal" => {"type" => "boolean", "default" => false},
     },
   },
 }

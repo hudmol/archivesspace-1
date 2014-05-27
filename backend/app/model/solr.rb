@@ -60,12 +60,22 @@ class Solr
           else # advanced_query["comparator"] == "equal"
             value = "[#{advanced_query["value"]}T00:00:00Z TO #{advanced_query["value"]}T00:00:00Z+1DAY-1MILLISECOND]"
           end
+        elsif advanced_query["jsonmodel_type"] == "field_query" && advanced_query["literal"]
+          value = "(\"#{solr_escape(advanced_query['value'])}\")"
         else
           value = "(#{advanced_query['value']})"
         end
 
         "#{prefix}#{field}:#{value}"
       end
+    end
+
+
+    SOLR_CHARS = '+-&|!(){}[]^"~*?:\\/'
+
+    def self.solr_escape(s)
+      pattern = Regexp.quote(SOLR_CHARS)
+      s.gsub(/([#{pattern}])/, '\\\\\1')
     end
 
 
