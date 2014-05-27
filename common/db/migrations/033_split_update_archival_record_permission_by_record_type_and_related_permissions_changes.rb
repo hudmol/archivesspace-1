@@ -98,7 +98,8 @@ Sequel.migration do
         end
       end
 
-      self[:permission].delete(:permission_id => update_archival_record_permission)
+      self[:group_permission].delete(:permission_id => update_archival_record_permission_id)
+      self[:permission].delete(:permission_id => update_archival_record_permission_id)
     end
   end
 
