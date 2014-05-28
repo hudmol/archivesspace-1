@@ -106,8 +106,8 @@ Sequel.migration do
       end
 
       $stderr.puts("Deleting update_archival_record permission")
-      self[:group_permission].delete(:permission_id => update_archival_record_permission_id)
-      self[:permission].delete(:permission_id => update_archival_record_permission_id)
+      self[:group_permission].filter(:permission_id => update_archival_record_permission_id).delete
+      self[:permission].filter(:permission_id => update_archival_record_permission_id).delete
     end
   end
 
