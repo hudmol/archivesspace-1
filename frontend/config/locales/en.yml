@@ -184,9 +184,9 @@ en:
       OR: Or
       NOT: Not
     date_operator:
-      equal: =
-      greater_than: "&gt;"
-      lesser_than: "&lt;"
+      equal: equals
+      greater_than: greater than
+      lesser_than: less than
     boolean_field:
       true_value: "True"
       false_value: "False"
