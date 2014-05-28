@@ -86,7 +86,7 @@ Sequel.migration do
       end
 
       $stderr.puts("Updating groups to include the new permssions")
-      update_archival_record_group_ids = self[:group_permission].filter(:permission_id => [delete_archival_record_permission_id, update_archival_record_permission_id]).select(:group_id).map {|row| row[:group_id]}.uniq
+      update_archival_record_group_ids = self[:group_permission].filter(:permission_id => update_archival_record_permission_id).select(:group_id).map {|row| row[:group_id]}.uniq
       update_archival_record_group_ids.each do |group_id|
         self[:group_permission].insert(:permission_id => update_accession_permission_id,
                                        :group_id => group_id)
