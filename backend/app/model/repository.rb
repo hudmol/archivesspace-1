@@ -42,14 +42,16 @@ class Repository < Sequel::Model(:repository)
                                                  "update_agent_record", "update_accession_record", "update_resource_record",
                                                  "update_digital_object_record", "update_event_record", "view_repository",
                                                  "delete_archival_record", "suppress_archival_record",
-                                                 "manage_subject_record", "manage_agent_record"]
+                                                 "manage_subject_record", "manage_agent_record", "manage_vocabulary_record",
+                                                 "import_records"]
                        },
                        {
                          :group_code => "repository-archivists",
                          :description => "Archivists of the #{repo_code} repository",
                          :grants_permissions => ["update_subject_record", "update_agent_record", "update_accession_record",
                                                  "update_resource_record", "update_digital_object_record", "update_event_record",
-                                                 "view_repository", "manage_subject_record", "manage_agent_record"]
+                                                 "view_repository", "manage_subject_record", "manage_agent_record",
+                                                 "manage_vocabulary_record", "import_records"]
                        },
                        {
                          :group_code => "repository-project-managers",
@@ -57,15 +59,16 @@ class Repository < Sequel::Model(:repository)
                          :grants_permissions => ["view_repository", "update_accession_record", "update_resource_record",
                                                  "update_digital_object_record", "update_event_record", "update_subject_record",
                                                  "update_agent_record", "delete_archival_record", "suppress_archival_record",
-                                                 "manage_subject_record", "manage_agent_record",
-                                                 'merge_agents_and_subjects']
+                                                 "manage_subject_record", "manage_agent_record", "manage_vocabulary_record",
+                                                 "import_records", 'merge_agents_and_subjects']
                        },
                        {
                          :group_code => "repository-advanced-data-entry",
                          :description => "Advanced Data Entry users of the #{repo_code} repository",
                          :grants_permissions => ["view_repository", "update_accession_record", "update_resource_record",
                                                  "update_digital_object_record", "update_event_record", "update_subject_record",
-                                                 "update_agent_record", "manage_subject_record", "manage_agent_record"]
+                                                 "update_agent_record", "manage_subject_record", "manage_agent_record",
+                                                 "manage_vocabulary_record", "import_records"]
                        },
                        {
                          :group_code => "repository-basic-data-entry",
