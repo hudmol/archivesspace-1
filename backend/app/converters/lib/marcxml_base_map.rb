@@ -1085,7 +1085,7 @@ module MarcXMLBaseMap
                                                     -> node {
                                                       terms = []
                                                       %w(a b c d f g).each do |code|
-                                                        val = node.xpath("subfield[@code='#{code}']")
+                                                        val = node.xpath("subfield[@code='#{code}']").inner_text
                                                         terms << make_term('geographic', val)
                                                       end
 
