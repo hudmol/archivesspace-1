@@ -5,11 +5,10 @@
     "type" => "object",
     "properties" => {
 
-      "negated" => {"type" => "boolean", "default" => false},
+      "comparator" => {"type" => "string", "enum" => ["greater_than", "lesser_than", "equal"]},
       "field" => {"type" => "string", "ifmissing" => "error"},
-      "value" => {"type" => "string", "ifmissing" => "error"},
+      "value" => {"type" => "date", "ifmissing" => "error"},
 
-      "literal" => {"type" => "boolean", "default" => false},
     },
   },
 }

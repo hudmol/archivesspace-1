@@ -71,6 +71,9 @@ module ApplicationHelper
     # retain any advanced search params
     advanced = (opts["advanced"] || params["advanced"])
     search_params["advanced"] = advanced.blank? || advanced === 'false' ? false : true
+    if search_params["advanced"]
+      search_params[:action] = :advanced_search
+    end
     (0..2).each do |i|
       search_params["v#{i}"] = params["v#{i}"]
       search_params["f#{i}"] = params["f#{i}"]

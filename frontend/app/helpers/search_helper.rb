@@ -35,6 +35,18 @@ module SearchHelper
 
     search_params["q"] = opts["q"] || params["q"]
 
+    # retain advanced search params
+    if params["advanced"]
+      search_params["advanced"] = params["advanced"]
+      params.keys.each do |param_key|
+        ["op", "f", "v", "dop", "t"].each do |adv_search_prefix|
+          if param_key =~ /^#{adv_search_prefix}\d+/
+            search_params[param_key] = params[param_key]
+          end
+        end
+      end
+    end
+
     search_params.reject{|k,v| k.blank? or v.blank?}
   end
 
