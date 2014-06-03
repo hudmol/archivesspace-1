@@ -1,7 +1,7 @@
 class AccessionsController < ApplicationController
 
   set_access_control  "view_repository" => [:index, :show],
-                      "update_archival_record" => [:new, :edit, :create, :update],
+                      "update_accession_record" => [:new, :edit, :create, :update],
                       "transfer_archival_record" => [:transfer],
                       "suppress_archival_record" => [:suppress, :unsuppress],
                       "delete_archival_record" => [:delete]

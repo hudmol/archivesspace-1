@@ -838,7 +838,7 @@ describe "ArchivesSpace user interface" do
 
 
     it "can link an accession to an agent as a subject" do
-      create_agent("Accession Subject Agent #{@me}")
+      create_agent("Subject Agent #{@me}")
       run_index_round
 
       $driver.click_and_wait_until_gone(:link, 'Edit')
@@ -1361,7 +1361,7 @@ describe "ArchivesSpace user interface" do
       # Try to navigate to the edit form
       $driver.get(digital_object_edit_url)
 
-      assert(5) { $driver.current_url.should eq(digital_object_edit_url) }
+      assert(5) { $driver.current_url.should eq(digital_object_url) }
       assert(5) { $driver.find_element(:css => "div.alert.alert-info").text.should eq('Digital Object is suppressed and cannot be edited') }
     end
 
@@ -2524,9 +2524,9 @@ describe "ArchivesSpace user interface" do
       @modal.find_element(:id, "archival_record_children_children__0__level_").select_option("fonds")
 
       @modal.find_element(:css, ".btn.add-rows-dropdown").click
-      8.times { @modal.find_element(:css, ".add-rows-form input").send_keys(:arrow_up) } 
-      $driver.wait_for_ajax
+      $driver.clear_and_send_keys([:css, ".add-rows-form input"], "9")
       @modal.find_element(:css, ".add-rows-form .btn.btn-primary").click
+
       # there should be 10 rows now :)
       @modal.find_elements(:css, "table tbody tr").length.should eq(10)
 
@@ -2767,7 +2767,7 @@ describe "ArchivesSpace user interface" do
       $driver.clear_and_send_keys([:id, "digital_record_children_children__0__label_"], "DO_LABEL")
 
       @modal.find_element(:css, ".btn.add-rows-dropdown").click
-      8.times { @modal.find_element(:css, ".add-rows-form input").send_keys(:arrow_up) } 
+      $driver.clear_and_send_keys([:css, ".add-rows-form input"], "9")
       @modal.find_element(:css, ".add-rows-form .btn.btn-primary").click
 
       # there should be 10 rows now :)
@@ -3208,7 +3208,6 @@ describe "ArchivesSpace user interface" do
 
   end
 
-
   describe "Advanced Search" do
 
     before(:all) do
@@ -3420,6 +3419,49 @@ describe "ArchivesSpace user interface" do
       $driver.find_element(:id => "global-search-button").click
 
       $driver.ensure_no_such_element(:css => "form.advanced-search")
+    end
+  end
+
+
+  describe "Permissions" do
+
+    before(:all) do
+      @perm_test_repo = "perm_test#{Time.now.to_i}_#{$$}"
+      (moo, @repo_uri) = create_test_repo(@perm_test_repo, "The name of the #{@perm_test_repo}")
+      (@archivist, @pass) = create_user
+      add_user_to_archivists(@archivist, @repo_uri)
+    end
+
+
+    it "allows archivists to edit major record types by default" do
+      login(@archivist, @pass)
+      select_repo(@perm_test_repo)
+      $driver.find_element(:link => 'Create').click
+      $driver.find_element(:link => 'Accession').click
+      $driver.find_element(:link => 'Create').click
+      $driver.find_element(:link => 'Resource').click
+      $driver.find_element(:link => 'Create').click
+      $driver.find_element(:link => 'Digital Object').click
+      logout
+    end
+
+
+    it "supports denying permission to edit Resources" do
+      login_as_admin
+      select_repo(@perm_test_repo)
+      $driver.find_element(:css, '.repo-container .btn.dropdown-toggle').click
+      $driver.find_element(:link, "Manage Groups").click
+
+      row = $driver.find_element_with_text('//tr', /repository-archivists/)
+      row.find_element(:link, 'Edit').click
+      $driver.find_element(:xpath, '//input[@id="update_resource_record"]').click
+      $driver.find_element(:css => 'button[type="submit"]').click
+      logout
+      login(@archivist, @pass)
+      select_repo(@perm_test_repo)
+      $driver.find_element(:link => 'Create').click
+      $driver.ensure_no_such_element(:link, "Resource")
+      logout
     end
 
   end
