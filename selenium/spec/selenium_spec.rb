@@ -694,6 +694,63 @@ describe "ArchivesSpace user interface" do
     end
 
 
+    it "can spawn an accession from an existing accession" do
+      $driver.find_element(:link, "Create").click
+      $driver.find_element(:link, "Accession").click
+
+      $driver.clear_and_send_keys([:id, "accession_title_"], "Charles Darwin's paperclip collection")
+      $driver.complete_4part_id("accession_id_%d_")
+      $driver.clear_and_send_keys([:id, "accession_accession_date_"], "2012-01-01")
+      $driver.clear_and_send_keys([:id, "accession_content_description_"], "Lots of paperclips")
+      $driver.clear_and_send_keys([:id, "accession_condition_description_"], "pristine")
+
+      # add a date
+      $driver.find_element(:css => '#accession_dates_ .subrecord-form-heading .btn').click
+      $driver.find_element(:id => "accession_dates__0__label_").select_option("digitized")
+      $driver.find_element(:id => "accession_dates__0__date_type_").select_option("single")
+      $driver.clear_and_send_keys([:id, "accession_dates__0__expression_"], "The day before yesterday.")
+
+      # add a rights subrecord
+      $driver.find_element(:css => '#accession_rights_statements_ .subrecord-form-heading .btn').click
+      $driver.find_element(:id => "accession_rights_statements__0__rights_type_").select_option("intellectual_property")
+      $driver.find_element(:id => "accession_rights_statements__0__ip_status_").select_option("copyrighted")
+      $driver.clear_and_send_keys([:id => "accession_rights_statements__0__jurisdiction__combobox"], ["AU", :return])
+      $driver.find_element(:id, "accession_rights_statements__0__active_").click
+
+      # add an external document
+      $driver.find_element(:css => "#accession_rights_statements__0__external_documents_ .subrecord-form-heading .btn").click
+      $driver.clear_and_send_keys([:id, "accession_rights_statements__0__external_documents__0__title_"], "Agreement")
+      $driver.clear_and_send_keys([:id, "accession_rights_statements__0__external_documents__0__location_"], "http://locationof.agreement.com")
+
+      # save
+      $driver.find_element(:css => "form#accession_form button[type='submit']").click
+
+      # Spawn an accession from the accession we just created
+      $driver.find_element(:link, "Spawn").click
+      $driver.find_element(:link, "Accession").click
+
+      $driver.clear_and_send_keys([:id, "accession_title_"], "Charles Darwin's second paperclip collection")
+      $driver.complete_4part_id("accession_id_%d_")
+
+      $driver.find_element(:css => "form#accession_form button[type='submit']").click
+
+      # Success!
+      assert(5) {
+        $driver.find_element_with_text('//div', /Accession Charles Darwin's second paperclip collection created/).should_not be_nil
+      }
+
+      $driver.click_and_wait_until_gone(:link => "Charles Darwin's second paperclip collection")
+
+      # date should have come across
+      date_headings = $driver.blocking_find_elements(:css => '#accession_dates_ .accordion-heading')
+      date_headings.length.should eq (1)
+
+      # rights and external doc shouldn't
+      $driver.ensure_no_such_element(:id, "accession_rights_statements_")
+      $driver.ensure_no_such_element(:id, "accession_external_documents_")
+    end
+
+
     it "can create an Accession" do
       $driver.find_element(:link, "Create").click
       $driver.find_element(:link, "Accession").click

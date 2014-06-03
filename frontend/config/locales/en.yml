@@ -320,6 +320,7 @@ en:
         deleted: Accession <strong>%{accession.display_string}</strong> deleted
         transfer_description: Transfer this accession to...
         transfer_target: Select a repository to transfer into
+        spawned: "This Accession has been spawned from Accession <strong>%{accession.display_string}</strong>"
       section:
         basic_information: Basic Information
       action:
