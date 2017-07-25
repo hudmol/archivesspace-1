@@ -1327,13 +1327,3 @@ en:
       assessment_review_required:
         true_value: "Yes"
         false_value: "No"
-
-  assessment_material:
-    _frontend:
-      action:
-        add: Add Material
-
-  assessment_conservation_issue:
-    _frontend:
-      action:
-        add: Add Conservation Issue
