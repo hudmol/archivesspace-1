@@ -133,9 +133,26 @@ class Assessment < Sequel::Model(:assessment)
                                            :assessment_attribute_definition_id => attribute['definition_id'])
         end
       end
+
+      # Calculate the derived "Research Value" rating (the sum of Interest and Documentation Quality)
+      research_value_id = db[:assessment_attribute_definition].filter(:label => 'Research Value').get(:id)
+      values = db[:assessment_attribute]
+        .join(:assessment_attribute_definition, :id => :assessment_attribute__assessment_attribute_definition_id)
+        .filter(:assessment_attribute_definition__label => ['Interest', 'Documentation Quality'],
+                :assessment_attribute__assessment_id => obj.id)
+        .select(:assessment_attribute__value)
+        .map {|row| row[:value] ? (Integer(row[:value]) rescue nil) : nil}
+
+      research_value = values.compact.reduce {|sum, n| sum + n}
+
+      if research_value
+        db[:assessment_attribute].insert(:assessment_id => obj.id,
+                                         :value => research_value.to_s,
+                                         :note => nil,
+                                         :assessment_attribute_definition_id => research_value_id)
+      end
     end
   end
-
 
   def self.sequel_to_jsonmodel(objs, opts = {})
     jsons = super

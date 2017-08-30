@@ -77,6 +77,7 @@ class AssessmentAttributeDefinitions
           :label => definition[:label],
           :type => definition[:type],
           :global => (definition[:repo_id] == Repository.global_repo_id),
+          :readonly => (definition[:readonly] == 1),
         }
       end
     end

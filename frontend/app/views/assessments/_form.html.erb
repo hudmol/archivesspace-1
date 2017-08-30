@@ -181,6 +181,7 @@
                                                                        a.fetch('label') <=> b.fetch('label')
               }.each do |rating| %>
                 <% form.push(form.set_index("ratings[]", ratings_index), ASUtils.wrap(form.obj['ratings']).find{|r| r['definition_id'] == rating['id']} || {}) do %>
+                  <% next if rating['readonly'] %>
                   <tr>
                     <td>
                       <%= rating.fetch('label') %>
