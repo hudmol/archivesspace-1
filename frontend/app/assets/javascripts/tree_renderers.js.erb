@@ -9,7 +9,7 @@ function BaseRenderer() {
 
     this.nodeTemplate = $('<tr> ' +
                           '  <td class="drag-handle"></td>' +
-                          '  <td class="title"><span class="indentor"><button class="expandme"><i class="expandme-icon glyphicon glyphicon-chevron-right" /></button></span> </td>' +
+                          '  <td class="title"><span class="indentor"><button class="expandme"><i class="expandme-icon glyphicon glyphicon-plus" /></button></span> </td>' +
                           '</tr>');
 }
 
@@ -43,7 +43,7 @@ function ResourceRenderer() {
 
     this.nodeTemplate = $('<tr> ' +
                           '  <td class="drag-handle"></td>' +
-                          '  <td class="title"><span class="indentor"><button class="expandme"><i class="expandme-icon glyphicon glyphicon-chevron-right" /></button></span> </td>' +
+                          '  <td class="title"><span class="indentor"><button class="expandme"><i class="expandme-icon glyphicon glyphicon-plus" /></button></span> </td>' +
                           '  <td class="resource-level"></td>' +
                           '  <td class="resource-type"></td>' +
                           '  <td class="resource-container"></td>' +
@@ -115,7 +115,7 @@ ResourceRenderer.prototype.build_type_summary = function(node) {
         });
 
         type_summary = types.join(', ');
-    } 
+    }
 
     return type_summary;
 };
@@ -177,7 +177,7 @@ function DigitalObjectRenderer() {
 
     this.nodeTemplate = $('<tr> ' +
                           '  <td class="drag-handle"></td>' +
-                          '  <td class="title"><span class="indentor"><button class="expandme"><i class="expandme-icon glyphicon glyphicon-chevron-right" /></button></span> </td>' +
+                          '  <td class="title"><span class="indentor"><button class="expandme"><i class="expandme-icon glyphicon glyphicon-plus" /></button></span> </td>' +
                           '  <td class="digital-object-type"></td>' +
                           '  <td class="file-uri-summary"></td>' +
                           '</tr>');
