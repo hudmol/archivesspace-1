@@ -573,6 +573,7 @@
 
             row.data('uri', rootNode.uri);
             row.attr('id', TreeIds.uri_to_tree_id(rootNode.uri));
+            row.attr('aria-level', 1);
             row.addClass('root-row');
             row.data('level', 0);
             row.data('child_count', rootNode.child_count);
@@ -736,7 +737,7 @@
                 row.addClass('largetree-node indent-level-' + level);
                 row.data('level', level);
                 row.data('child_count', node.child_count);
-
+                row.attr('aria-level', level + 1);
                 var title = row.find('.title');
                 var strippedTitle = $("<div>").html(node.title).text();
                 title.append($('<a class="record-title" />').prop('href', TreeIds.link_url(node.uri)).text(node.title));
