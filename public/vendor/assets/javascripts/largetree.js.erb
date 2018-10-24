@@ -755,6 +755,10 @@
                     row.find('.expandme').attr('aria-haspopup', true).attr('aria-expanded', false);
                 }
 
+                if (node.child_count !== 0) {
+                    row.find('.expandme').attr('aria-haspopup', true).attr('aria-expanded', false);
+                }
+
                 self.renderer.add_node_columns(row, node);
 
                 var tree_id = TreeIds.uri_to_tree_id(node.uri);
