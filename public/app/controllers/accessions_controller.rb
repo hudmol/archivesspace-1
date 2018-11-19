@@ -36,7 +36,7 @@ class AccessionsController <  ApplicationController
     end
     page = Integer(params.fetch(:page, "1"))
     search_opts = default_search_opts( DEFAULT_AC_SEARCH_OPTS)
-    search_opts['fq'] = ["repository:\"/repositories/#{@repo_id}\""] if @repo_id
+    search_opts['fq'] = AdvancedQueryBuilder.new.and('repository', "/repositories/#{@repo_id}") if @repo_id
     begin
       set_up_and_run_search( DEFAULT_AC_TYPES, DEFAULT_AC_FACET_TYPES,  search_opts, params)
     rescue NoResultsError

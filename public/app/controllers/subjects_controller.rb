@@ -29,7 +29,7 @@ class SubjectsController <  ApplicationController
       end
     end
     search_opts = default_search_opts(DEFAULT_SUBJ_SEARCH_OPTS)
-    search_opts['fq'] = ["used_within_published_repository:\"/repositories/#{repo_id}\""] if repo_id
+    search_opts['fq'] = AdvancedQueryBuilder.and('used_within_published_repository', "/repositories/#{repo_id}") if repo_id
     @base_search  =  repo_id ? "/repositories/#{repo_id}/subjects?" : '/subjects?'
     default_facets = repo_id ? [] : ['used_within_published_repository']
     page = Integer(params.fetch(:page, "1"))
@@ -116,7 +116,7 @@ Rails.logger.debug("we hit search!")
     qry = "subjects:\"#{title}\" AND types:pui"
     @base_search = "#{uri}?"
     search_opts =  default_search_opts(DEFAULT_SUBJ_SEARCH_OPTS)
-    search_opts['fq']=[qry]
+    search_opts['fq'] = AdvancedQueryBuilder.and('subjects', title).and('types', 'pui')
     set_up_search(DEFAULT_SUBJ_TYPES, DEFAULT_SUBJ_FACET_TYPES, search_opts, params, qry)
    # we do this to compensate for the way @base_search gets munged in the setup
     @base_search= @base_search.sub("q=#{qry}", '')

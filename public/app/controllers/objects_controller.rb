@@ -28,7 +28,7 @@ class ObjectsController <  ApplicationController
     end
     page = Integer(params.fetch(:page, "1"))
     search_opts = default_search_opts(DEFAULT_OBJ_SEARCH_OPTS)
-    search_opts['fq'] = ["repository:\"/repositories/#{repo_id}\""] if repo_id
+    search_opts['fq'] = AdvancedQueryBuilder.new.and('repository', "/repositories/#{repo_id}") if repo_id
     @base_search = repo_id ? "/repositories/#{repo_id}/objects?" : '/objects?'
 
     begin
