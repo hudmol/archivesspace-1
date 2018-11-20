@@ -190,7 +190,7 @@ class ResourcesController < ApplicationController
 
   def waypoints
     search_opts = {
-      'resolve[]' => ['top_container_uri_u_sstr:id']
+      'resolve[]' => ['top_container_uri_u_sstr:id', 'ancestors:id']
     }
     results = archivesspace.search_records(params[:urls], search_opts, true)
 

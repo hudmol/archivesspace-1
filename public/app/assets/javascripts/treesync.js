@@ -89,24 +89,25 @@
         }
     };
 
-    TreeSync.prototype.SCROLL_TIMEOUT = 500;
+    TreeSync.prototype.SCROLL_TIMEOUT = 100;
     TreeSync.prototype.handleScroll = function() {
         var self = this;
 
         var syncAfterScroll = function () {
-            var $record = self.scroller.getClosestElement();
-            var uri = $record.data('uri');
+            var context = self.scroller.getCurrentContext();
+            var uri = context.uri;
             var tree_id = TreeIds.uri_to_tree_id(uri);
-            self.tree.setCurrentNode(tree_id, function() {
-                self.tree.elt.scrollTo('#'+tree_id, 0, {offset: -50});
-            });
+            self.tree.setCurrentNode(tree_id);
+            // self.tree.setCurrentNode(tree_id, function() {
+            //     self.tree.elt.scrollTo('#'+tree_id, 0, {offset: -50});
+            // });
         };
 
         clearTimeout(this.scrollTimeout);
 
-        this.scrollTimeout = setTimeout(function() {
+        // this.scrollTimeout = setTimeout(function() {
             syncAfterScroll();
-        }, this.SCROLL_TIMEOUT);
+        // }, this.SCROLL_TIMEOUT);
     };
 
 
