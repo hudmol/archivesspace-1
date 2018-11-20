@@ -9,6 +9,7 @@
         this.base_url = base_url;
         this.wrapper = elt;
         this.elt = elt.find('.infinite-record-container');
+        this.contextSummaryElt = elt.siblings('.infinite-record-context');
         this.recordCount = recordCount;
 
         this.scrollPosition = 0;
@@ -16,9 +17,21 @@
 
         this.scrollCallbacks = [];
 
+        var self = this;
+
+        function onLoaded() {
+            if (loaded_callback) {
+                loaded_callback();
+            }
+
+            self.updateContextSummary();
+        }
+
         this.initScrollbar();
         this.initEventHandlers();
-        this.considerPopulatingWaypoints(false, null, loaded_callback);
+        this.considerPopulatingWaypoints(false, null, onLoaded);
+
+        this.registerScrollCallback($.proxy(this.updateContextSummary, this));
 
         this.globalStyles = $('<style />');
 
@@ -332,6 +345,36 @@
         var allRecords = this.elt.find('.infinite-record-record');
         var index = this.findClosestElement(allRecords);
         return $(allRecords.get(index));
+    };
+
+    InfiniteScroll.prototype.getCurrentContext = function() {
+        var current = this.getClosestElement();
+        var ancestors = current.find('.context ul li');
+
+        if (ancestors.length > 1) {
+            var $link = $(ancestors.get(1).innerHTML);
+            return {
+                uri: $link.data('uri'),
+                link: $link
+            };
+        } else if (ancestors.length == 1) {
+            var $link = $(ancestors.get(0).innerHTML);
+            return {
+                uri: $link.data('uri'),
+                link: $link
+            };
+        } else {
+            return null;
+        }
+    };
+
+    InfiniteScroll.prototype.updateContextSummary = function() {
+        var context = this.getCurrentContext();
+        if (context) {
+            this.contextSummaryElt.html(context.link);
+        } else {
+            this.contextSummaryElt.empty();
+        }
     };
 
     exports.InfiniteScroll = InfiniteScroll;
