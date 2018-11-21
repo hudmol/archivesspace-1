@@ -27,12 +27,23 @@
 
   <dl class="dl-horizontal">
 
-    <% accessrestrict_note = @result.note('accessrestrict') %>
-    <% if accessrestrict_note && !accessrestrict_note['note_text'].blank? %>
-      <dt><%= accessrestrict_note['label'] %></dt>
-      <dd>
-        <%= render partial: 'shared/single_note', locals: {:type => 'accessrestrict', :note_struct => accessrestrict_note, :notitle => true} %>
-      </dd>
+    <% ['physloc',
+        'langmaterial',
+        'physdesc',
+        'accessrestrict',
+        'userestrict',
+        'acqinfo',
+        'arrangement',
+        'originalsloc',
+        'relatedmaterial',
+       ].each do |note_type| %>
+      <% the_note = @result.note(note_type) %>
+      <% if the_note && !the_note['note_text'].blank? %>
+        <dt><%= the_note['label'] %></dt>
+        <dd>
+          <%= render partial: 'shared/single_note', locals: {:type => note_type, :note_struct => the_note, :notitle => true} %>
+        </dd>
+      <% end %>
     <% end %>
 
     <% unless @result.dates.blank? %>
