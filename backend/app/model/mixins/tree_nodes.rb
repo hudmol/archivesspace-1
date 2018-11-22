@@ -457,11 +457,10 @@ module TreeNodes
     end
 
 
-    def calculate_object_graph(object_graph, opts = {})
+    def calculate_object_graph(object_graph, filters = {})
       object_graph.each do |model, id_list|
         next if self != model
-
-        ids = self.any_repo.filter(:parent_id => id_list).
+        ids = self.any_repo(filters.fetch(self, nil)).filter(:parent_id => id_list).
                    select(:id).map {|row|
           row[:id]
         }
