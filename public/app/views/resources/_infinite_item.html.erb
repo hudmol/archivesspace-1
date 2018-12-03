@@ -1,7 +1,23 @@
 <%
   indent_level = @result.raw.fetch('ancestors', []).length
+  scopecontent_note = @result.note('scopecontent')
+
+  labelledby = "infinite-item-dispay-string-#{posinset}"
+  describedby = labelledby
+  if scopecontent_note
+    scopecontent_note_id = "infinite-item-scope-note-#{posinset}"
+    describedby += " #{scopecontent_note_id}"
+  end
 %>
-<div class="infinite-item infinite-item-indent-<%= indent_level %>">
+<div class="infinite-item infinite-item-indent-<%= indent_level %>"
+     role="article"
+     aria-labelledby="<%= labelledby %>"
+     aria-describedby="<%= describedby %>"
+     aria-posinset="<%= posinset %>"
+     aria-setsize="<%= setsize %>"
+     tabindex="0"
+     data-uri="<%= @result.uri %>"
+>
 
   <div class="context" style="display: none">
     <ul>
@@ -17,12 +33,15 @@
   </div>
 
   <div class="information" style="overflow: hidden;">
-      <%= render partial: 'shared/idbadge', locals: {:result => @result, :props => { :full => false} } %>
+      <h3 id="<%= labelledby %>">
+        <a class="record-title" href="<%= app_prefix(@result.uri) %>">  <%== @result.display_string %></a>
+      </h3>
   </div>
 
-  <% scopecontent_note = @result.note('scopecontent') %>
   <% if scopecontent_note %>
-    <%= render partial: 'shared/single_note', locals: {:type => 'abstract', :note_struct => scopecontent_note, :notitle => true} %>
+    <div id="<%= scopecontent_note_id %>">
+      <%= render partial: 'shared/single_note', locals: {:type => 'abstract', :note_struct => scopecontent_note, :notitle => true} %>
+    </div>
   <% end %>
 
   <dl class="dl-horizontal">

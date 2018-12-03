@@ -299,6 +299,7 @@ en:
   related_resources: Related Collections
   linked_instances: Linked Records
   linked_digital_objects: Digital Material
+  collection_feed: All records in the collection
 
   accession:
    _singular: Unprocessed

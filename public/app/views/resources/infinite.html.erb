@@ -20,15 +20,15 @@
 <%= javascript_include_tag 'largetree' %>
 <%= javascript_include_tag 'tree_renderer' %>
 
-<div class="row" id="tabs">
+<div class="row feed-container" id="tabs">
   <div class="col-sm-9">
     <div class="infinite-record-context"></div>
     <div class="infinite-record-wrapper">
-      <div class="infinite-record-container">
+      <div id="collection-feed" class="infinite-record-container" role="feed" aria-label="<%= I18n.t('collection_feed') %>">
         <div class="root">
           <% waypoint_size = 20 %>
           <% @ordered_records.each_slice(waypoint_size).each_with_index do |refs, i| %>
-            <div class="waypoint" data-waypoint-number="<%= i %>" data-waypoint-size=<%= waypoint_size %> data-uris="<%= refs.map {|r| r['ref']}.join(';') %>">&nbsp;</div>
+            <div class="waypoint" data-waypoint-number="<%= i %>" data-waypoint-size=<%= waypoint_size %> data-uris="<%= refs.map {|r| r['ref']}.join(';') %>" data-collection-size="<%= @ordered_records.length %>">&nbsp;</div>
           <% end %>
         </div>
       </div>
@@ -73,13 +73,13 @@ window.tree = tree;
 <script>
   // handle clicks on tree items
   $('.infinite-record-wrapper').on('click', '.infinite-record-record a.record-title', function(event) {
-      // update the hash so browser-back returns user to the record they clicked
-      var $record = $(this).closest('.infinite-record-record');
-      var uri = $record.data('uri');
-      var tree_id = TreeIds.uri_to_tree_id(uri);
-      location.hash = '#tree::'+tree_id;
+    // update the hash so browser-back returns user to the record they clicked
+    var $record = $(this).closest('.infinite-record-record');
+    var uri = $record.data('uri');
+    var tree_id = TreeIds.uri_to_tree_id(uri);
+    location.hash = '#tree::'+tree_id;
 
-      return true;
+    return true;
   });
 </script>
 
