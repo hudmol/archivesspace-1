@@ -15,14 +15,25 @@
 
 <%= render partial: 'resources/resource_alltabs' %>
 
-<%= javascript_include_tag 'treesync' %>
 <%= javascript_include_tag 'infinite_scroll' %>
-<%= javascript_include_tag 'largetree' %>
-<%= javascript_include_tag 'tree_renderer' %>
 
 <div class="row feed-container" id="tabs">
-  <div class="col-sm-9">
-    <div class="infinite-record-context"></div>
+  <section class="col-sm-9">
+    <nav class="infinite-record-context">
+      <div class="dropdown">
+        <a id="scrollContext" class="btn btn-default" data-target="#" href="javascript:void(0)" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" aria-label="Navigate to record in feed">
+          <span class="current-record-title"><%= @result.display_string %></span>
+          <span class="caret"></span>
+        </a>
+
+        <ul class="dropdown-menu" aria-labelledby="scrollContext">
+          <li><%= link_to @result.display_string, "#scroll::#{@result.uri}", 'data-uri': @result.uri %></li>
+          <% @result.all_series.each do |record| %>
+            <li><%= link_to "&mdash; #{record.display_string}".html_safe, "#scroll::#{record.uri}", 'data-uri': record.uri %></li>
+          <% end %>
+        </ul>
+      </div>
+    </nav>
     <div class="infinite-record-wrapper">
       <div id="collection-feed" class="infinite-record-container" role="feed" aria-label="<%= I18n.t('collection_feed') %>">
         <div class="root">
@@ -33,41 +44,21 @@
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div id="sidebar" class="sidebar sidebar-container col-sm-3 resizable-sidebar infinite-tree-sidebar">
-    <div class="infinite-tree-view largetree-container" id='tree-container'></div>
+  <div class="col-sm-3">
   </div>
 </div>
 
 <script>
-
- var syncer = new TreeSync('<%= params[:rid]%>');
- window.syncer = syncer;
-
  var scroll = new InfiniteScroll('<%= url_for(:action => :show) %>/infinite',
                                  $('.infinite-record-wrapper'),
                                  <%= @ordered_records.length %>,
                                  function() {
-                                     syncer.infiniteScrollIsReady(scroll);
                                  });
 
  /* NOTE: This just here for debugging... */
  window.scroller = scroll;
-
- var tree = new LargeTree(new TreeDataSource('<%= url_for(:action => :show) %>/tree'),
-                          $('.infinite-tree-view'),
-                          '<%= @root_uri %>',
-                          true,
-                          new SimpleRenderer(),
-                          function() {
-                              syncer.treeIsReady(tree);
-                          },
-                          function(current_node, tree) {
-                            // tree.expandNode(current_node);
-                          });
-
-window.tree = tree;
 </script>
 
 <script>
@@ -76,11 +67,14 @@ window.tree = tree;
     // update the hash so browser-back returns user to the record they clicked
     var $record = $(this).closest('.infinite-record-record');
     var uri = $record.data('uri');
-    var tree_id = TreeIds.uri_to_tree_id(uri);
-    location.hash = '#tree::'+tree_id;
+    location.hash = '#scroll::'+uri;
 
     return true;
   });
+</script>
+
+<script>
+    $('#scrollContext').dropdown()
 </script>
 
 <%= render partial: 'shared/modal_actions' %>

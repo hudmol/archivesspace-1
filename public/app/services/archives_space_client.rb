@@ -129,6 +129,12 @@ class ArchivesSpaceClient
     SolrResults.new(results, search_opts)
   end
 
+  def get_all_series(resource_uri)
+    SolrResults.new({
+      'results' => search_all_results("resource:\"#{resource_uri}\" AND level:series AND types:pui_archival_object")
+    }).records
+  end
+
   private
 
 

@@ -885,10 +885,24 @@ span.head {
 
 // YALE THINGS
 .feed-container .infinite-record-context {
-  border-bottom: 1px solid #CCC;
-  height: 40px;
-  line-height: 40px;
-  overflow: hidden;
+}
+
+.feed-container .infinite-record-context .dropdown,
+.feed-container .infinite-record-context .dropdown a#scrollContext,
+.feed-container .infinite-record-context .dropdown .dropdown-menu {
+  width: 100%;
+}
+
+.feed-container .infinite-record-context .dropdown a#scrollContext {
+  position: relative;
+  text-align: left;
+
+  .caret {
+    right: 10px;
+    position: absolute;
+    top: 50%;
+    margin-top: -2px;
+  }
 }
 
 .feed-container .infinite-tree-view .expandme {
