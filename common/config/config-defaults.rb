@@ -661,3 +661,18 @@ AppConfig[:ark_url_prefix] = proc { AppConfig[:public_proxy_url] }
 
 # Specifies if the fields that show up in csv should be limited to those in search results
 AppConfig[:limit_csv_fields] = true
+
+#The number of characters to truncate before showing the 'Read More' link on notes
+AppConfig[:pui_readmore_max_characters] = 450
+
+# Display order of resource and archival object notes in the PUI scroll view
+AppConfig[:pui_scroll_view_notes_order] = ['scopecontent',
+                                           'physloc',
+                                           'langmaterial',
+                                           'physdesc',
+                                           'accessrestrict',
+                                           'userestrict',
+                                           'acqinfo',
+                                           'arrangement',
+                                           'originalsloc',
+                                           'relatedmaterial']

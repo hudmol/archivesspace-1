@@ -1,18 +1,13 @@
 <%
   indent_level = @result.raw.fetch('ancestors', []).length
-  scopecontent_note = @result.note('scopecontent')
 
   labelledby = "infinite-item-dispay-string-#{posinset}"
-  describedby = labelledby
-  if scopecontent_note
-    scopecontent_note_id = "infinite-item-scope-note-#{posinset}"
-    describedby += " #{scopecontent_note_id}"
-  end
+  describedby = "infinite-item-notes-#{posinset}"
 %>
 <div class="infinite-item infinite-item-indent-<%= indent_level %>"
      role="article"
      aria-labelledby="<%= labelledby %>"
-     aria-describedby="<%= describedby %>"
+     aria-describedby="<%= labelledby %> <%= describedby %>"
      aria-posinset="<%= posinset %>"
      aria-setsize="<%= setsize %>"
      tabindex="0"
@@ -38,24 +33,8 @@
       </h3>
   </div>
 
-  <% if scopecontent_note %>
-    <div id="<%= scopecontent_note_id %>">
-      <%= render partial: 'shared/single_note', locals: {:type => 'abstract', :note_struct => scopecontent_note, :notitle => true} %>
-    </div>
-  <% end %>
-
-  <dl class="dl-horizontal">
-
-    <% ['physloc',
-        'langmaterial',
-        'physdesc',
-        'accessrestrict',
-        'userestrict',
-        'acqinfo',
-        'arrangement',
-        'originalsloc',
-        'relatedmaterial',
-       ].each do |note_type| %>
+  <dl id="<%= describedby %> " class="dl-horizontal">
+    <% scroll_view_notes_order.each do |note_type| %>
       <% the_note = @result.note(note_type) %>
       <% if the_note && !the_note['note_text'].blank? %>
         <dt><%= the_note['label'] %></dt>
@@ -64,7 +43,9 @@
         </dd>
       <% end %>
     <% end %>
+  </dl>
 
+  <dl class="dl-horizontal">
     <% unless @result.dates.blank? %>
         <dt><%= t('resource._public.dates') %></dt>
         <% @result.dates.each do |date| %>

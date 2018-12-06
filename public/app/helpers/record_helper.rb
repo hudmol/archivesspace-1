@@ -83,4 +83,8 @@ module RecordHelper
     </span>".html_safe
   end
 
+  def scroll_view_notes_order
+    AppConfig[:pui_scroll_view_notes_order]
+  end
+
 end
