@@ -97,7 +97,7 @@ class Search < Struct.new(:q, :op, :field, :limit, :from_year, :to_year, :filter
    fqa = []
    self[:filter_q].each do |v|
      Rails.logger.debug("v: #{v} CGI-escaped: #{CGI.escape(v)}")
-     uri = (url)? url.sub("&filter_q[]=#{CGI.escape(v)}", "") : ''
+     uri = (url)? url.gsub(/#{Regexp.quote("&filter_q[]=#{CGI.escape(v)}")}(&|$)/, "\\1") : ''
      fqa.push({'v' => v, 'uri' => uri})
    end
    fqa
