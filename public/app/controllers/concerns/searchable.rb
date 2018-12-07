@@ -122,10 +122,10 @@ module Searchable
     }
     raise I18n.t('navbar.error_no_term') unless have_query  # just in case we missed something
 
-    # any search within results?
+    # any search within results?  Add them to the query string
     @search[:filter_q].each do |v|
       unless v.blank?
-        filter_query.and('keyword', v, 'text', false, false)
+        advanced_query_builder.and('keyword', v, 'text', false, false)
       end
     end
 
