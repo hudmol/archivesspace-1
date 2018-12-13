@@ -300,6 +300,7 @@ en:
   linked_instances: Linked Records
   linked_digital_objects: Digital Material
   collection_feed: All records in the collection
+  collection_feed_nav: Navigate to Series
 
   accession:
    _singular: Unprocessed
