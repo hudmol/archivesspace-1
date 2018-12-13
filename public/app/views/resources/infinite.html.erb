@@ -21,13 +21,13 @@
   <section class="col-sm-9">
     <nav class="infinite-record-context">
       <div class="dropdown">
-        <a id="scrollContext" class="btn btn-default" data-target="#" href="javascript:void(0)" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" aria-label="Navigate to record in feed">
+        <a id="scrollContext" class="btn btn-default" data-target="#" href="javascript:void(0)" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" aria-label="<%= I18n.t('collection_feed_nav') %>">
           <span class="current-record-title"><%= @result.display_string %></span>
           <span class="caret"></span>
         </a>
 
         <ul class="dropdown-menu" aria-labelledby="scrollContext">
-          <li><%= link_to @result.display_string, "#scroll::#{@result.uri}", 'data-uri': @result.uri %></li>
+          <li><%= link_to @result.display_string, "#scroll::#{@result.uri}", 'data-uri': @result.uri, 'aria-current': true %></li>
           <% @result.all_series.each do |record| %>
             <li><%= link_to "&mdash; #{record.display_string}".html_safe, "#scroll::#{record.uri}", 'data-uri': record.uri %></li>
           <% end %>

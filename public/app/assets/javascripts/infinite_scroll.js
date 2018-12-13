@@ -393,11 +393,14 @@
     InfiniteScroll.prototype.updateContextSummary = function() {
         var context = this.getCurrentContext();
         if (context) {
-            // this.contextSummaryElt.html(context.link);
             $('#scrollContext .current-record-title').html(context.link.html());
+            this.contextSummaryElt.find('.dropdown-menu a').removeAttr('aria-current');
+            this.contextSummaryElt.find('.dropdown-menu a[data-uri="'+context.uri+'"]').attr('aria-current', 'true');
         } else {
             // this.contextSummaryElt.empty();
             $('#scrollContext .current-record-title').html($('#scrollContext').parent().find('.dropdown-menu a:first').html());
+            this.contextSummaryElt.find('.dropdown-menu a').removeAttr('aria-current');
+            this.contextSummaryElt.find('.dropdown-menu a:first').attr('aria-current', 'true');
         }
     };
 
