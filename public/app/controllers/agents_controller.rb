@@ -26,7 +26,7 @@ class AgentsController <  ApplicationController
       end
     end
     search_opts = default_search_opts(DEFAULT_AG_SEARCH_OPTS)
-    search_opts['fq'] = AdvancedQueryBuilder.new.add("used_within_published_repository", "/repositories/#{repo_id}") if repo_id
+    search_opts['fq'] = AdvancedQueryBuilder.new.and("used_within_published_repository", "/repositories/#{repo_id}") if repo_id
     @base_search  =  repo_id ? "/repositories/#{repo_id}/agents?" : '/agents?'
     default_facets = DEFAULT_AG_FACET_TYPES.dup
     default_facets.push('used_within_published_repository') unless repo_id

@@ -28,7 +28,7 @@ class ClassificationsController <  ApplicationController
       end
     end
     search_opts = default_search_opts( DEFAULT_CL_SEARCH_OPTS)
-    search_opts['fq'] = AdvancedQueryBuilder.new.add("repository", "/repositories/#{repo_id}") if repo_id
+    search_opts['fq'] = AdvancedQueryBuilder.new.and("repository", "/repositories/#{repo_id}") if repo_id
 
     @base_search = repo_id ? "repositories/#{repo_id}/classifications?" : '/classifications?'
     page = Integer(params.fetch(:page, "1"))
