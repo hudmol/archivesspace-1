@@ -74,6 +74,19 @@ class ArchivesSpaceClient
     SolrResults.new(results, search_opts, full_notes)
   end
 
+  # calls the '/search/records' endpoint as a POST
+  def search_records_as_post(record_list, search_opts = {}, full_notes = false)
+    search_opts = set_search_opts(search_opts)
+
+    url = build_url('/search/records')
+    results = do_search_post(url, search_opts.merge("uri[]" => record_list))
+
+    # Ensure that the order of our results matches the order of `record_list`
+    results['results'] = results['results'].sort_by {|result| record_list.index(result.fetch('id'))}
+
+    SolrResults.new(results, search_opts, full_notes)
+  end
+
   def get_raw_record(uri, search_opts = {})
     search_opts = set_search_opts(search_opts)
     url = build_url('/search/records', search_opts.merge("uri[]" => ASUtils.wrap(uri)))
@@ -159,6 +172,20 @@ class ArchivesSpaceClient
     results
   end
 
+
+  def do_search_post(url, post_data)
+    request = Net::HTTP::Post.new(url)
+    request.body = URI.encode_www_form(post_data)
+    Rails.logger.debug("POST Search url: #{url} ")
+
+    response = do_http_request(request)
+    if response.code != '200'
+      Rails.logger.debug("Code: #{response.code}")
+      raise RequestFailedException.new("#{response.code}: #{response.body}")
+    end
+    results = JSON.parse(response.body)
+    results
+  end
 
   # Authenticate to ArchivesSpace and grab a session token.  If @session isn't
   # nil, this won't do anything.  If multiple threads attempt to log in at the

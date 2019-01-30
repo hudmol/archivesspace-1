@@ -15,7 +15,7 @@
 
 <%= render partial: 'resources/resource_alltabs' %>
 
-<%= javascript_include_tag 'infinite_scroll' %>
+<%#= javascript_include_tag 'infinite_scroll' %>
 
 <div class="row feed-container" id="tabs">
   <section class="col-sm-9">
@@ -37,10 +37,7 @@
     <div class="infinite-record-wrapper">
       <div id="collection-feed" class="infinite-record-container" role="feed" aria-label="<%= I18n.t('collection_feed') %>">
         <div class="root">
-          <% waypoint_size = 20 %>
-          <% @ordered_records.each_slice(waypoint_size).each_with_index do |refs, i| %>
-            <div class="waypoint" data-waypoint-number="<%= i %>" data-waypoint-size=<%= waypoint_size %> data-uris="<%= refs.map {|r| r['ref']}.join(';') %>" data-collection-size="<%= @ordered_records.length %>">&nbsp;</div>
-          <% end %>
+          <%== @listing %>
         </div>
       </div>
     </div>
@@ -50,31 +47,31 @@
   </div>
 </div>
 
-<script>
- var scroll = new InfiniteScroll('<%= url_for(:action => :show) %>/infinite',
-                                 $('.infinite-record-wrapper'),
-                                 <%= @ordered_records.length %>,
-                                 function() {
-                                 });
+<!--<script>-->
+<!-- var scroll = new InfiniteScroll('<%= url_for(:action => :show) %>/infinite',-->
+<!--                                 $('.infinite-record-wrapper'),-->
+<!--                                 <%#= @ordered_records.length %>,-->
+<!--                                 function() {-->
+<!--                                 });-->
 
- /* NOTE: This just here for debugging... */
- window.scroller = scroll;
-</script>
+<!-- /* NOTE: This just here for debugging... */-->
+<!-- window.scroller = scroll;-->
+<!--</script>-->
 
-<script>
-  // handle clicks on tree items
-  $('.infinite-record-wrapper').on('click', '.infinite-record-record a.record-title', function(event) {
-    // update the hash so browser-back returns user to the record they clicked
-    var $record = $(this).closest('.infinite-record-record');
-    var uri = $record.data('uri');
-    location.hash = '#scroll::'+uri;
+<!--<script>-->
+<!--  // handle clicks on tree items-->
+<!--  $('.infinite-record-wrapper').on('click', '.infinite-record-record a.record-title', function(event) {-->
+<!--    // update the hash so browser-back returns user to the record they clicked-->
+<!--    var $record = $(this).closest('.infinite-record-record');-->
+<!--    var uri = $record.data('uri');-->
+<!--    location.hash = '#scroll::'+uri;-->
 
-    return true;
-  });
-</script>
+<!--    return true;-->
+<!--  });-->
+<!--</script>-->
 
-<script>
-    $('#scrollContext').dropdown()
-</script>
+<!--<script>-->
+<!--    $('#scrollContext').dropdown()-->
+<!--</script>-->
 
 <%= render partial: 'shared/modal_actions' %>

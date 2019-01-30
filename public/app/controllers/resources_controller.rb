@@ -185,6 +185,25 @@ class ResourcesController <  ApplicationController
       @context = [{:uri => @repo_info['top']['uri'], :crumb => @repo_info['top']['name']}, {:uri => nil, :crumb => process_mixed_content(@result.display_string)}]
       fill_request_info
       @ordered_records = archivesspace.get_record(@root_uri + '/ordered_records').json.fetch('uris')
+
+      orig_result = @result
+
+      @listing = ""
+      search_opts = {
+        'resolve[]' => ['top_container_uri_u_sstr:id', 'ancestors:id', 'resource:id']
+      }
+      @ordered_records.collect{|h| h["ref"]}.each_slice(500) do |chunk|
+        results = archivesspace.search_records_as_post(chunk, search_opts, true)
+        results.records.each_with_index {|record, i|
+          @result = record
+          @listing += render_to_string(:partial => 'infinite_item',
+                            :locals => {
+                              :record_number =>  i,
+                              :collection_size =>  results.records.length
+                            })}
+      end
+
+      @result = orig_result
     rescue RecordNotFound
       @type = I18n.t('resource._singular')
       @page_title = I18n.t('errors.error_404', :type => @type)
