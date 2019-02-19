@@ -123,10 +123,16 @@ module Searchable
     raise I18n.t('navbar.error_no_term') unless have_query  # just in case we missed something
 
     # any search within results?  Add them to the query string
+    search_within_builder = AdvancedQueryBuilder.new
+
     @search[:filter_q].each do |v|
-      unless v.blank?
-        advanced_query_builder.and('keyword', v, 'text', false, false)
+      AdvancedQueryBuilder.split_into_terms(v).each do |term|
+        search_within_builder.and('keyword', term, 'text', false, false)
       end
+    end
+
+    unless search_within_builder.empty?
+      filter_query.and(search_within_builder)
     end
 
     # we have to add filtered dates, if they exist

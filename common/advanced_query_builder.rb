@@ -1,4 +1,5 @@
 require 'jsonmodel'
+require 'stringio'
 
 class AdvancedQueryBuilder
 
@@ -170,6 +171,51 @@ class AdvancedQueryBuilder
 
       query
     end
+  end
+
+  # A very rough tokenizer to turn a simple search string into a set of terms
+  #
+  # "hello world" => ["hello", "world"]
+  # "hello \"quoted string\" world" => ["hello", "quoted string", "world"]
+  #
+  def self.split_into_terms(s)
+    terms = []
+
+    input = s.to_s.chars.to_enum
+    current_term = StringIO.new
+    inside_string = false
+
+    save_term = lambda {
+      terms << current_term.string.clone
+      current_term.truncate(0)
+      current_term.rewind
+    }
+
+    loop do
+      ch = input.next
+
+      if ch == '"'
+        if inside_string
+          # End of string
+          save_term.call
+        else
+          # Starting a new string
+        end
+
+        inside_string = !inside_string
+      elsif ch == ' ' && !inside_string
+        # End of current term
+        save_term.call
+      else
+        # Keep shovelling characters
+        current_term << ch
+      end
+    end
+
+    # end of input
+    save_term.call
+
+    terms.map(&:strip).reject(&:empty?)
   end
 
 end
