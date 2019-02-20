@@ -893,15 +893,34 @@ span.head {
   width: 100%;
 }
 
-.feed-container .infinite-record-context .dropdown a#scrollContext {
-  position: relative;
-  text-align: left;
+.feed-container .infinite-record-context {
+  padding: 8px 15px;
+  margin-bottom: 20px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
 
-  .caret {
-    right: 10px;
-    position: absolute;
-    top: 50%;
-    margin-top: -2px;
+  .dropdown a#scrollContext {
+    position: relative;
+    text-align: left;
+    padding: 10px 16px;
+
+    .caret {
+      right: 10px;
+      position: absolute;
+      top: 50%;
+      margin-top: -2px;
+    }
+  }
+  .dropdown-menu:after {
+    content: ' End of List ';
+    text-align: center;
+    color: #AAA;
+    font-size: 0.8em;
+    border-top: 1px dotted #CCC;
+    width: 90%;
+    margin: 12px 5% 4px;
+    padding: 4px 0;
+    display: block;
   }
 }
 
