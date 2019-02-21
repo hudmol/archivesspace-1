@@ -1,0 +1,15 @@
+<% items.each_with_index do |item, i| %>
+<%
+  @result = item
+
+  record_number = start_index + i
+%>
+<div class="infinite-record-record" id="record-number-<%= record_number %>" data-record-number="<%= record_number %>" data-level="<%= item.level %>" data-uri="<%= item['uri'] %>" data-ancestors="<%=h item.json["ancestors"].to_json %>">
+  <%= render partial: 'resources/infinite_item',
+             locals: {
+               record_number: record_number,
+               collection_size: collection_size
+             }
+  %>
+</div>
+<% end %>
