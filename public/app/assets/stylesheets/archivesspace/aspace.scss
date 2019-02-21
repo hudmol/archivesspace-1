@@ -894,15 +894,24 @@ span.head {
 }
 
 .feed-container .infinite-record-context {
-  padding: 8px 15px;
-  margin-bottom: 20px;
-  background-color: #f5f5f5;
-  border-radius: 4px;
+  .infinite-record-context-affix {
+    padding: 8px 15px;
+    margin-bottom: 20px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+  }
 
   .dropdown a#scrollContext {
     position: relative;
     text-align: left;
     padding: 10px 16px;
+
+    .current-record-title {
+      width: 98%;
+      display: inline-block;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
 
     .caret {
       right: 10px;
@@ -910,6 +919,9 @@ span.head {
       top: 50%;
       margin-top: -2px;
     }
+  }
+  .dropdown-menu {
+    overflow: auto;
   }
   .dropdown-menu:after {
     content: ' End of List ';
@@ -970,4 +982,16 @@ span.head {
 .honeypot {
   position: absolute;
   left: -9999px;
+}
+
+.infinite-record-context.fixed {
+  margin-top: 60px;
+
+  .infinite-record-context-affix {
+    height: 60px;
+    position: fixed;
+    top: 5px;
+    z-index: 100;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+  }
 }
