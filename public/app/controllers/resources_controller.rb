@@ -185,6 +185,7 @@ class ResourcesController <  ApplicationController
       @context = [{:uri => @repo_info['top']['uri'], :crumb => @repo_info['top']['name']}, {:uri => nil, :crumb => process_mixed_content(@result.display_string)}]
       fill_request_info
       @ordered_records = archivesspace.get_record(@root_uri + '/ordered_records').json.fetch('uris')
+      @ordered_records.shift # drop resource as rendered by default
     rescue RecordNotFound
       @type = I18n.t('resource._singular')
       @page_title = I18n.t('errors.error_404', :type => @type)
@@ -196,7 +197,7 @@ class ResourcesController <  ApplicationController
 
   def waypoints
     search_opts = {
-      'resolve[]' => ['top_container_uri_u_sstr:id', 'ancestors:id', 'resource:id']
+      'resolve[]' => ['top_container_uri_u_sstr:id']
     }
 
     urls = params[:urls]
@@ -206,15 +207,31 @@ class ResourcesController <  ApplicationController
 
     results = archivesspace.search_records(params[:urls], search_opts, true)
 
-    render :json => Hash[results.records.map {|record|
-                          @result = record
-                          record_number = (waypoint_number * waypoint_size) + urls.index(@result.uri)
-                          [record.uri,
-                          render_to_string(:partial => 'infinite_item',
-                                           :locals => {
-                                             :record_number =>  record_number,
-                                             :collection_size =>  collection_size
-                                           })]}]
+    # setup caching
+    resource_uri = "/repositories/#{params[:rid]}/resources/#{params[:id]}"
+    resource_json = archivesspace.get_raw_record(resource_uri)
+    resource_system_mtime = resource_json.fetch("system_mtime")
+    response.set_header('Cache-Control', "max-age=#{60*60*24}")
+    response.set_header('Last-Modified', DateTime.strptime(resource_system_mtime).strftime("%a, %d %m %Y %H:%M:%S GMT"))
+
+    respond_to do |format|
+      format.html do
+        render partial: 'infinite_items', locals: { items: results.records, start_index: (waypoint_number * waypoint_size + 1), collection_size: collection_size }
+      end
+      format.json do
+        render :json => Hash[results.records.map {|record|
+          @result = record
+          record_number = (waypoint_number * waypoint_size) + urls.index(@result.uri) + 1
+          [record.uri,
+           render_to_string(:partial => 'infinite_item',
+                            :locals => {
+                              :record_number =>  record_number,
+                              :collection_size =>  collection_size
+                            })]}]
+      end
+    end
+
+
   end
 
   def tree_root

@@ -1,21 +1,11 @@
-.infinite-record-wrapper {
-    height: 600px;
-    overflow: hidden;
-}
-
 .infinite-record-container {
     width: 100%;
     overflow: hidden;
     will-change: transform;
 
     .waypoint {
-        height: 1em;
-    }
-
-    .waypoint.populated {
         height: auto;
     }
-
 }
 
 .infinite-record-scrollbar {
@@ -80,6 +70,16 @@ $indent-width: 20px;
             padding: 0 0 5px;
         }
     }
+}
+
+.waypoint.loading:before {
+    content: 'Loading...';
+    display: block;
+    padding: 10px;
+    border: 1px solid #EEE;
+    background: #FAFAFA;
+    width: 100%;
+    border: 4px;
 }
 
 .waypoint:last-child {

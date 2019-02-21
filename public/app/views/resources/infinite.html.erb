@@ -15,31 +15,36 @@
 
 <%= render partial: 'resources/resource_alltabs' %>
 
-<%= javascript_include_tag 'infinite_scroll' %>
+<%= javascript_include_tag 'waypoint_loader' %>
 
 <div class="row feed-container" id="tabs">
   <section class="col-sm-9">
     <nav class="infinite-record-context">
-      <div class="dropdown">
-        <a id="scrollContext" class="btn btn-default" data-target="#" href="javascript:void(0)" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" aria-label="<%= I18n.t('collection_feed_nav') %>">
-          <span class="current-record-title"><%= @result.display_string %></span>
-          <span class="caret"></span>
-        </a>
-
-        <ul class="dropdown-menu" aria-labelledby="scrollContext">
-          <li><%= link_to @result.display_string, "#scroll::#{@result.uri}", 'data-uri': @result.uri, 'aria-current': true %></li>
-          <% @result.all_series.each do |record| %>
-            <li><%= link_to "&mdash; #{record.display_string}".html_safe, "#scroll::#{record.uri}", 'data-uri': record.uri %></li>
-          <% end %>
-        </ul>
+      <div class="infinite-record-context-affix">
+        <div class="dropdown">
+          <a id="scrollContext" class="btn btn-default" data-target="#" href="javascript:void(0)" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" aria-label="<%= I18n.t('collection_feed_nav') %>">
+            <span class="current-record-title"><%= @result.display_string %></span>
+            <span class="caret"></span>
+          </a>
+  
+          <ul class="dropdown-menu" aria-labelledby="scrollContext">
+            <li><%= link_to @result.display_string, "#scroll::#{@result.uri}", 'data-uri': @result.uri, 'aria-current': true, title: @result.display_string %></li>
+            <% @result.all_series.each do |record| %>
+              <li><%= link_to "&mdash; #{record.display_string}".html_safe, "#scroll::#{record.uri}", 'data-uri': record.uri, title: record.display_string %></li>
+            <% end %>
+          </ul>
+        </div>
       </div>
     </nav>
     <div class="infinite-record-wrapper">
       <div id="collection-feed" class="infinite-record-container" role="feed" aria-label="<%= I18n.t('collection_feed') %>">
         <div class="root">
+          <div class="infinite-record-record" id="record-number-0">
+            <%= render :partial => 'infinite_item', locals: {record_number: 0, collection_size: @ordered_records.length + 1} %>
+          </div>
           <% waypoint_size = 20 %>
           <% @ordered_records.each_slice(waypoint_size).each_with_index do |refs, i| %>
-            <div class="waypoint" data-waypoint-number="<%= i %>" data-waypoint-size=<%= waypoint_size %> data-uris="<%= refs.map {|r| r['ref']}.join(';') %>" data-collection-size="<%= @ordered_records.length %>">&nbsp;</div>
+            <div class="waypoint" data-waypoint-number="<%= i %>" data-waypoint-size=<%= waypoint_size %> data-uris="<%= refs.map {|r| r['ref']}.join(';') %>" data-collection-size="<%= @ordered_records.length + 1 %>">&nbsp;</div>
           <% end %>
         </div>
       </div>
@@ -51,14 +56,14 @@
 </div>
 
 <script>
- var scroll = new InfiniteScroll('<%= url_for(:action => :show) %>/infinite',
+ var loader = new WaypointLoader('<%= url_for(:action => :show) %>/infinite',
                                  $('.infinite-record-wrapper'),
                                  <%= @ordered_records.length %>,
                                  function() {
                                  });
-
+ 
  /* NOTE: This just here for debugging... */
- window.scroller = scroll;
+ window.loader = loader;
 </script>
 
 <script>
@@ -74,7 +79,10 @@
 </script>
 
 <script>
-    $('#scrollContext').dropdown()
+    $('#scrollContext').dropdown();
+    $('#scrollContext').closest('.dropdown').on('show.bs.dropdown', function() {
+        $(this).find('.dropdown-menu').css('max-height', $(window).height() - 80);
+    });
 </script>
 
 <%= render partial: 'shared/modal_actions' %>
