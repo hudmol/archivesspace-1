@@ -41,6 +41,10 @@
       </h3>
   </div>
 
+  <div class="record-type-badge">
+    <%= @result.container_summary_for_badge %>
+  </div>
+
   <dl id="<%= describedby %> " class="dl-horizontal scroll-view-notes">
     <% scroll_view_notes_order.each do |note_type| %>
       <% the_note = @result.note(note_type) %>
