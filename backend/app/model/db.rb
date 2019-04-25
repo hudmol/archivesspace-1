@@ -327,8 +327,13 @@ eof
 
 
     def increase_lock_version_or_fail(obj)
+      # only update the lock_version if the system_mtime is at least a second old
+      mtime = obj.class.dataset.filter(:id => obj.id).get(:system_mtime)
+      new_lock_version = obj.lock_version
+      new_lock_version += 1 if Time.now > mtime + 1
+
       updated_rows = obj.class.dataset.filter(:id => obj.id, :lock_version => obj.lock_version).
-                     update(:lock_version => obj.lock_version + 1,
+                     update(:lock_version => new_lock_version,
                             :system_mtime => Time.now)
 
       if updated_rows != 1
