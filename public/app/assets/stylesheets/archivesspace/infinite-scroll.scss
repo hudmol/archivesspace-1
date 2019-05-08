@@ -100,23 +100,3 @@ $indent-width: 20px;
         }
     }
 }
-
-// archival object only
-.waypoint .infinite-item {
-    padding: 10px 20px;
-
-    &.infinite-item-indent-1 {
-        padding: 10px 0;
-    }
-
-    h3 {
-        font-size: 1.1rem;
-        margin-bottom: 5px;
-    }
-    dl dt {
-        display: none;
-    }
-    dl dd {
-        margin-left: 0;
-    }
-}

@@ -9,7 +9,7 @@
 
   has_visible_notes = scroll_view_notes_order.any?{|note_type| (note = @result.note(note_type)) && !note['note_text'].blank?}
 %>
-<div class="infinite-item infinite-item-indent-<%= indent_level %>"
+<div class="infinite-item infinite-item-indent-<%= indent_level %> infinite-item-<%= @result.primary_type.gsub('_','-') %>"
      role="article"
      aria-labelledby="<%= labelledby %>"
      aria-describedby="<%= labelledby %><% if has_visible_notes %> <%= describedby %><% end %>"
