@@ -951,12 +951,21 @@ span.head {
     display: block;
     background-color: white;
     padding: 15px 20px;
-    font-size: 1.25rem;
     border-bottom: 1px solid #CCC;
     margin-bottom: 10px;
-    font-weight: bold;
-    color: #34b6e4;
     box-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+    text-decoration: none !important;
+
+    .infinite-record-context-resource-title {
+      font-weight: bold;
+      color: #34b6e4;
+      font-size: 1.25rem;
+    }
+
+    .infinite-record-context-resource-back-to-top {
+      float: right;
+      line-height: 30px;
+    }
   }
 
   .infinite-record-context-affix {

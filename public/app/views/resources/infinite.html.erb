@@ -21,9 +21,14 @@
   <section class="col-sm-9">
     <nav class="infinite-record-context">
       <div class="infinite-record-context-affix">
-        <div aria-hidden="true" class="infinite-record-context-resource">
-          <%= @result.display_string %>
-        </div>
+        <a href="#main-content" aria-hidden="true" class="infinite-record-context-resource">
+          <span class="infinite-record-context-resource-title">
+            <%= @result.display_string %>
+          </span>
+          <span class="infinite-record-context-resource-back-to-top">
+            <i aria-hidden="true" class="fa fa-chevron-up"></i> Return to top
+          </span>
+        </a>
         <div class="infinite-record-context-selector">
           <div class="dropdown">
             <a id="scrollContext" class="btn btn-default" data-target="#" href="javascript:void(0)" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" aria-label="<%= I18n.t('collection_feed_nav') %>">
