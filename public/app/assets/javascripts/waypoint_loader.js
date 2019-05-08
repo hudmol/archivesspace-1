@@ -55,7 +55,7 @@
             var collectionSize = $(waypoint).data('collection-size');
             var uris = $(waypoint).data('uris').split(';');
 
-            $(waypoint).addClass('loading');
+            $(waypoint).addClass('loading').attr('tabindex', '0');
 
             $.ajax(self.url_for('waypoints'), {
                 method: 'GET',
@@ -68,7 +68,7 @@
                 async: true,
             }).done(function (html) {
                 $(waypoint).html(html);
-                $(waypoint).removeClass('loading');
+                $(waypoint).removeClass('loading').removeAttr('tabindex');
 
                 load_callback();
 
