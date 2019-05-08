@@ -894,7 +894,11 @@ span.head {
 }
 
 .feed-container .infinite-record-context {
-  .infinite-record-context-affix {
+  .infinite-record-context-resource {
+    display: none;
+  }
+
+  .infinite-record-context-selector {
     padding: 8px 15px;
     margin-bottom: 20px;
     background-color: #f5f5f5;
@@ -943,11 +947,28 @@ span.head {
 .infinite-record-context.fixed {
   margin-top: 60px;
 
+  .infinite-record-context-resource {
+    display: block;
+    background-color: white;
+    padding: 15px 20px;
+    font-size: 1.25rem;
+    border-bottom: 1px solid #CCC;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #34b6e4;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+  }
+
   .infinite-record-context-affix {
-    height: 60px;
     position: fixed;
-    top: 5px;
+    top: 0;
+    left: 0;
+    width: 100%;
     z-index: 100;
+  }
+
+  .infinite-record-context-selector {
+    height: 60px;
     box-shadow: 1px 1px 5px rgba(0,0,0,0.3);
   }
 }

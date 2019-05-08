@@ -225,9 +225,11 @@
 
         $(window).on('scroll', function() {
             if (window.scrollY > self.elt.offset().top) {
-                self.contextSummaryElt.addClass('fixed').find('.infinite-record-context-affix').css('width', self.elt.width() + 'px')
+                self.contextSummaryElt.addClass('fixed');
+                self.contextSummaryElt.find('.infinite-record-context-selector').css('width', self.elt.width() + 'px').css('margin-left', self.elt.offset().left + 'px');
+                self.contextSummaryElt.find('.infinite-record-context-resource').css('padding-left', self.elt.offset().left + 'px');
             } else {
-                self.contextSummaryElt.removeClass('fixed').find('.infinite-record-context-affix').css('width', 'auto');
+                self.contextSummaryElt.removeClass('fixed').find('.infinite-record-context-selector').css('width', 'auto').css('margin-left', 0);
             }
 
             self.updateContextSummary();

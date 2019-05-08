@@ -21,18 +21,22 @@
   <section class="col-sm-9">
     <nav class="infinite-record-context">
       <div class="infinite-record-context-affix">
-        <div class="dropdown">
-          <a id="scrollContext" class="btn btn-default" data-target="#" href="javascript:void(0)" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" aria-label="<%= I18n.t('collection_feed_nav') %>">
-            <span class="current-record-title"><%= @result.display_string %></span>
-            <span class="caret"></span>
-          </a>
-  
-          <ul class="dropdown-menu" aria-labelledby="scrollContext">
-            <li><%= link_to @result.display_string, "#scroll::#{@result.uri}", 'data-uri': @result.uri, 'aria-current': true, title: @result.display_string %></li>
-            <% @result.all_series.each do |record| %>
-              <li><%= link_to "&mdash; #{record.display_string}".html_safe, "#scroll::#{record.uri}", 'data-uri': record.uri, title: record.display_string %></li>
-            <% end %>
-          </ul>
+        <div aria-hidden="true" class="infinite-record-context-resource">
+          <%= @result.display_string %>
+        </div>
+        <div class="infinite-record-context-selector">
+          <div class="dropdown">
+            <a id="scrollContext" class="btn btn-default" data-target="#" href="javascript:void(0)" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" aria-label="<%= I18n.t('collection_feed_nav') %>">
+              <span class="current-record-title"><%= @result.display_string %></span>
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="scrollContext">
+              <li><%= link_to @result.display_string, "#scroll::#{@result.uri}", 'data-uri': @result.uri, 'aria-current': true, title: @result.display_string %></li>
+              <% @result.all_series.each do |record| %>
+                <li><%= link_to "&mdash; #{record.display_string}".html_safe, "#scroll::#{record.uri}", 'data-uri': record.uri, title: record.display_string %></li>
+              <% end %>
+            </ul>
+          </div>
         </div>
       </div>
     </nav>
