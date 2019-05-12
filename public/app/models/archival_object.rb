@@ -9,7 +9,9 @@ class ArchivalObject < Record
   end
 
   def resource_uri
-    resolved_resource && resolved_resource['uri']
+    return resolved_resource['uri'] if resolved_resource
+
+    json.dig('resource','ref')
   end
 
   def direct_component_id
