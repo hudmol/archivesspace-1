@@ -88,10 +88,14 @@
 </script>
 
 <script>
+    function resizeContextDropdown() {
+        $('#scrollContext').closest('.dropdown').find('.dropdown-menu').css('max-height', $(window).height() - 200);
+    }
     $('#scrollContext').dropdown();
     $('#scrollContext').closest('.dropdown').on('show.bs.dropdown', function() {
-        $(this).find('.dropdown-menu').css('max-height', $(window).height() - 80);
+        resizeContextDropdown();
     });
+    $(window).resize(resizeContextDropdown);
 </script>
 
 <%= render partial: 'shared/modal_actions' %>
