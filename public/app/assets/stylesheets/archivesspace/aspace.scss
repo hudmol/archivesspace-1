@@ -955,16 +955,45 @@ span.head {
     margin-bottom: 10px;
     box-shadow: 1px 1px 5px rgba(0,0,0,0.3);
     text-decoration: none !important;
+    position: relative;
+
+    @media (max-width: 640px) {
+      padding: 15px 30px 15px 15px !important;
+    }
 
     .infinite-record-context-resource-title {
       font-weight: bold;
       color: #34b6e4;
       font-size: 1.25rem;
+
+      @media (max-width: 640px) {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+        overflow: hidden;
+        font-size: 18px;
+        line-height: 28px;
+        vertical-align: middle;
+        display: inline-block;
+        font-size: 18px;
+      }
     }
 
     .infinite-record-context-resource-back-to-top {
       float: right;
       line-height: 30px;
+
+      @media (max-width: 640px) {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        margin-top: -15px;
+
+        span {
+          left: -10000px;
+          position: absolute;
+        }
+      }
     }
   }
 

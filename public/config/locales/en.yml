@@ -2045,3 +2045,6 @@ en:
     search_results: Skip to search results
 
   search_tab: Search %{target}
+
+  collection_organization:
+    return_to_top: Return to top
