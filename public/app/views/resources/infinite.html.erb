@@ -26,7 +26,7 @@
             <i aria-hidden="true" class="fa fa-chevron-up"></i> <span><%= I18n.t('collection_organization.return_to_top') %></span>
           </span>
           <span class="infinite-record-context-resource-title">
-            <%= @result.display_string %>
+            <%== @result.display_string %>
           </span>
         </a>
         <div class="infinite-record-context-selector">
@@ -36,7 +36,7 @@
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" aria-labelledby="scrollContext">
-              <li><%= link_to @result.display_string, "#scroll::#{@result.uri}", 'data-uri': @result.uri, 'aria-current': true, title: @result.display_string %></li>
+              <li><%= link_to @result.display_string.html_safe, "#scroll::#{@result.uri}", 'data-uri': @result.uri, 'aria-current': true, title: @result.display_string %></li>
               <% @result.all_series.each do |record| %>
                 <li><%= link_to "&mdash; #{record.display_string}".html_safe, "#scroll::#{record.uri}", 'data-uri': record.uri, title: record.display_string %></li>
               <% end %>
