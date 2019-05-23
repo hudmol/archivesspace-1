@@ -9,6 +9,12 @@
 (function (exports) {
     "use strict";
 
+    if (exports.Tree) {
+        // Just load once.  Otherwise we redefine the renderers which may have
+        // been changed by a plugin already.
+        return;
+    }
+
     var renderers = {
         resource: new ResourceRenderer(),
         digital_object: new DigitalObjectRenderer(),
@@ -20,17 +26,17 @@
 
         self.datasource = new TreeDataSource(datasource_url);
 
-        var tree_renderer = renderers[root_record_type];
+        var tree_renderer = Tree.getRenderer(root_record_type);
 
         self.toolbar_renderer = new TreeToolbarRenderer(self, toolbar_container);
 
         self.root_record_type = root_record_type;
 
-        self.large_tree = new LargeTree(self.datasource, 
+        self.large_tree = new LargeTree(self.datasource,
                                         tree_container,
                                         root_uri,
                                         read_only,
-                                        tree_renderer, 
+                                        tree_renderer,
                                         function() {
                                             self.ajax_tree = new AjaxTree(self, form_container);
                                             self.resizer = new TreeResizer(self, tree_container);
@@ -52,6 +58,14 @@
         });
     };
 
+
+    Tree.getRenderer = function(record_type) {
+        return renderers[record_type]
+    };
+
+    Tree.setRenderer = function(record_type, new_renderer) {
+        renderers[record_type] = new_renderer;
+    };
 
     Tree.prototype.current = function() {
         return $('.current', this.large_tree.elt);
