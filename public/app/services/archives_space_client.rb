@@ -135,7 +135,7 @@ class ArchivesSpaceClient
     all_series = SolrResults.new({
       'results' => search_all_results("resource:\"#{resource_uri}\" AND level:series AND types:pui_archival_object")
     }).records
-
+    all_series.delete_if {|record| record.json['parent']}
     all_series.sort_by {|record| record.json.fetch('position') }
   end
 
