@@ -129,14 +129,15 @@ module Searchable
         advanced_query_builder.and('keyword_published', v, 'text', false, false)
       end
     end
-
-    # we have to add filtered dates, if they exist
-    unless @search[:dates_searched] || (@search[:filter_to_year].blank? && @search[:filter_from_year].blank?)
-      from =  @search[:filter_from_year]
-      to = @search[:filter_to_year]
-      builder = AdvancedQueryBuilder.new
-      builder.and('years', AdvancedQueryBuilder::RangeValue.new(from, to), 'range', false, false)
-      filter_query.and(builder)
+     # we have to add filtered dates, if they exist
+    unless @search[:dates_searched]
+      years = get_filter_years(params)
+      unless years['from_year'].blank? && years['to_year'].blank?
+        builder = AdvancedQueryBuilder.new
+        builder.and('years', AdvancedQueryBuilder::RangeValue.new(years['from_year'], years['to_year']), 'range', false, false)
+        advanced_query_builder.and(builder)
+        @base_search = "#{@base_search}&filter_from_year=#{years['from_year']}&filter_to_year=#{years['to_year']}"
+      end
     end
 
     @criteria = default_search_opts
