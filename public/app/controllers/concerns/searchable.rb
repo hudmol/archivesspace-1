@@ -52,8 +52,7 @@ module Searchable
       filter_query.add('repository', repo_id)
       @base_search = "#{@base_search}&repo_id=#{repo_id.gsub('/','%2f')}"
     end
-
-    years = get_years(params)
+    years = get_filter_years(params)
     if !years.blank?
       builder = AdvancedQueryBuilder.new
       builder.and('years', AdvancedQueryBuilder::RangeValue.new(years['from_year'], years['to_year']), 'range', false, false)
@@ -176,7 +175,7 @@ module Searchable
   end
 
 
-  def get_years(params)
+  def get_filter_years(params)
     params = sanitize_params(params)
     years = {}
     from = params.fetch(:filter_from_year,'').strip
