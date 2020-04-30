@@ -11,8 +11,9 @@ require_relative 'validator_cache'
 
 module JSONModel
 
-  @@models = {}
-  @@custom_validations = {}
+  @@models = java.util.concurrent.ConcurrentHashMap.new
+  @@custom_validations = java.util.concurrent.ConcurrentHashMap.new
+
   @@strict_mode = false
 
 
