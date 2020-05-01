@@ -14,15 +14,15 @@ require 'shellwords'
 PLUGINS = [
   {
     :path => 'plugins/series_system',
-    :url => 'https://github.com/hudmol/series_system.git',
+    :url => 'git@gitlab.gaiaresources.com.au:qsa/series_system.git',
   },
   {
     :path => 'plugins/as_history',
-    :url => 'https://github.com/hudmol/as_history.git',
+    :url => 'git@gitlab.gaiaresources.com.au:qsa/as_history.git',
   },
   {
     :path => 'plugins/qsa_theme',
-    :url => 'https://github.com/hudmol/qsa_theme.git',
+    :url => 'git@gitlab.gaiaresources.com.au:qsa/qsa_theme.git',
   },
   {
     :path => 'plugins/in_a_rush',
@@ -30,27 +30,27 @@ PLUGINS = [
   },
   {
     :path => 'plugins/as_mogwai',
-    :url => 'https://github.com/hudmol/as_mogwai.git',
+    :url => 'git@gitlab.gaiaresources.com.au:qsa/as_mogwai.git',
   },
   {
     :path => 'plugins/as_runcorn',
-    :url => 'https://github.com/hudmol/as_runcorn.git',
+    :url => 'git@gitlab.gaiaresources.com.au:qsa/as_runcorn.git',
   },
   {
     :path => 'plugins/as_reformulator',
-    :url => 'https://github.com/hudmol/as_reformulator.git',
+    :url => 'git@gitlab.gaiaresources.com.au:qsa/as_reformulator.git',
   },
   {
     :path => 'plugins/as_cartography',
-    :url => 'https://github.com/hudmol/as_cartography.git',
+    :url => 'git@gitlab.gaiaresources.com.au:qsa/as_cartography.git',
   },
   {
     :path => 'plugins/qsa_kitchensink',
-    :url => 'https://github.com/hudmol/qsa_kitchensink.git',
+    :url => 'git@gitlab.gaiaresources.com.au:qsa/qsa_kitchensink.git',
   },
   {
     :path => 'plugins/qsa_www',
-    :url => 'https://github.com/hudmol/qsa_www.git',
+    :url => 'git@gitlab.gaiaresources.com.au:qsa/qsa_www.git',
   },
   {
     :path => 'plugins/qsa_migration_adapter',
