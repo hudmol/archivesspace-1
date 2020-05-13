@@ -174,7 +174,7 @@ class SearchResultData
     return @sort_fields if @sort_fields
 
     @sort_fields = [].concat(self.class.BASE_SORT_FIELDS)
-    @sort_fields << 'primary_type' if single_type?
+    @sort_fields << 'primary_type' unless single_type?
     @sort_fields
   end
 
