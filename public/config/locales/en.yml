@@ -115,9 +115,9 @@ en:
     head_suffix: Results
     searching: Searching
     search_for: "Search  %{type} where %{conditions}"
-    keyword_contain: "<strong>keyword(s)</strong>: <span class='searchterm'>%{kw}</span>"
+    keyword_published_contain: "<strong>keyword(s)</strong>: <span class='searchterm'>%{kw}</span>"
     title_contain: "the <strong>title</strong> contains  <span class='searchterm'>%{kw}</span>"
-    notes_contain: "the <strong>note</strong> contains  <span class='searchterm'>%{kw}</span>"
+    notes_published_contain: "the <strong>note</strong> contains  <span class='searchterm'>%{kw}</span>"
     creators_text_contain: "the <strong>creator</strong> contains <span class='searchterm'>%{kw}</span>"
     subjects_text_contain: "the <strong>subject</strong> contains <span class='searchterm'>%{kw}</span>"
     identifier_contain: "the <strong>identifier</strong> contains <span class='searchterm'>%{kw}</span>"
