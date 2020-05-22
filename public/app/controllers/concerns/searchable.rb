@@ -103,7 +103,7 @@ module Searchable
       query.gsub!(/\[\]/x) { |c| "\\" + c }
       have_query = true
       op = @search[:op][i]
-      field = @search[:field][i].blank? ? 'keyword' :  @search[:field][i]
+      field = @search[:field][i].blank? ? 'keyword_published' :  @search[:field][i]
       from = @search[:from_year][i] || ''
       to = @search[:to_year][i] || ''
       @base_search += '&' if @base_search.last != '?'
@@ -127,7 +127,7 @@ module Searchable
     # any search within results?  Add them to the query string
     @search[:filter_q].each do |v|
       unless v.blank?
-        advanced_query_builder.and('keyword', v, 'text', false, false)
+        advanced_query_builder.and('keyword_published', v, 'text', false, false)
       end
     end
 
@@ -379,7 +379,7 @@ module Searchable
       else
         condition += I18n.t("search_results.op.#{@search[:op][i]}", :default => "").downcase
       end
-      f = @search[:field][i].blank? ? 'keyword' : @search[:field][i]
+      f = @search[:field][i].blank? ? 'keyword_published' : @search[:field][i]
       condition += ' ' + I18n.t("search_results.#{f}_contain", :kw =>  CGI::escapeHTML((q == '*' ? I18n.t('search_results.anything') : q)) )
       unless @search[:from_year][i].blank? &&  @search[:to_year][i].blank?
          from_year = @search[:from_year][i].blank? ? I18n.t('search_results.filter.year_begin') : @search[:from_year][i]

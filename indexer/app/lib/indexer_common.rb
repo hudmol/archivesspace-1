@@ -118,21 +118,26 @@ class IndexerCommon
   end
 
 
-  def self.extract_string_values(doc)
+  def self.extract_string_values(doc, published_only = false)
     text = ""
+    if published_only && doc.is_a?(Hash) && doc.has_key?('publish') && !doc['publish']
+      # doc is unpublished so don't index anything from here
+      return text
+    end
+
     doc.each do |key, val|
       if %w(created_by last_modified_by system_mtime user_mtime json types create_time date_type jsonmodel_type publish extent_type language script system_generated suppressed source rules name_order).include?(key)
       elsif key =~ /_enum_s$/
       elsif val.is_a?(String)
         text << "#{val} "
       elsif val.is_a?(Hash)
-        text << self.extract_string_values(val)
+        text << self.extract_string_values(val, published_only)
       elsif val.is_a?(Array)
         val.each do |v|
           if v.is_a?(String)
             text << "#{v} "
           elsif v.is_a?(Hash)
-            text << self.extract_string_values(v)
+            text << self.extract_string_values(v, published_only)
           end
         end
       end
@@ -142,8 +147,8 @@ class IndexerCommon
   end
 
 
-  def self.build_fullrecord(record)
-    fullrecord = IndexerCommon.extract_string_values(record)
+  def self.build_fullrecord(record, published_only = false)
+    fullrecord = IndexerCommon.extract_string_values(record, published_only)
     %w(finding_aid_subtitle finding_aid_author).each do |field|
       if record['record'].has_key?(field)
         fullrecord << "#{record['record'][field]} "
@@ -152,7 +157,7 @@ class IndexerCommon
 
     if record['record'].has_key?('names')
       fullrecord << record['record']['names'].map {|name|
-        IndexerCommon.extract_string_values(name)
+        IndexerCommon.extract_string_values(name, published_only)
       }.join(" ")
     end
     fullrecord
@@ -214,6 +219,7 @@ class IndexerCommon
   def add_notes(doc, record)
     if record['record']['notes']
       doc['notes'] = record['record']['notes'].map {|note| IndexerCommon.extract_string_values(note) }.join(" ");
+      doc['notes_published'] = record['record']['notes'].map {|note| IndexerCommon.extract_string_values(note, published_only=true) }.join(" ")
     end
   end
 
@@ -627,6 +633,8 @@ class IndexerCommon
     add_document_prepare_hook { |doc, record|
       doc['fullrecord'] ||= ''
       doc['fullrecord'] << IndexerCommon.build_fullrecord(record)
+      doc['fullrecord_published'] ||= ''
+      doc['fullrecord_published'] << ' ' + IndexerCommon.build_fullrecord(record, published_only=true)
     }
 
 
