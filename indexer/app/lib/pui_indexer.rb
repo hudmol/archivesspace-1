@@ -47,10 +47,22 @@ class PUIIndexer < PeriodicIndexer
     super + PUI_RESOLVES
   end
 
+  PUI_RECORD_TYPES = [
+    :accession,
+    :resource,
+    :archival_object,
+    :digital_object,
+    :digital_object_component,
+    :classification,
+    :classification_term,
+    :agent_person,
+    :agent_corporate_entity,
+    :subject,
+    :repository,
+  ]
+
   def record_types
-    # We only want to index the record types we're going to make separate
-    # PUI-specific versions of...
-    (super.select {|type| RecordInheritance.has_type?(type)} + [:archival_object]).uniq
+    PUI_RECORD_TYPES
   end
 
   def configure_doc_rules
@@ -65,16 +77,31 @@ class PUIIndexer < PeriodicIndexer
 
 
     add_document_prepare_hook {|doc, record|
+      doc['types'] ||= []
+      doc['types'] << 'pui'
 
-      if RecordInheritance.has_type?(doc['primary_type'])
-        parent_id = doc['id']
-        doc['id'] = "#{parent_id}#pui"
-        doc['pui_parent_id'] = parent_id
-        doc['types'] ||= []
-        doc['types'] << 'pui'
-        doc['types'] << "pui_#{doc['primary_type']}"
-        doc['types'] << 'pui_record'
-        doc['types'] << 'pui_only'
+      parent_id = doc['id']
+      doc['id'] = "#{parent_id}#pui"
+      doc['pui_parent_id'] = parent_id
+
+      # p ['pui', doc['id']]
+
+      doc['types'] << "pui_#{doc['primary_type']}"
+      doc['types'] << 'pui_record'
+      doc['types'] << 'pui_only'
+
+      if ['agent_person', 'agent_corporate_entity'].include?(doc['primary_type'])
+        doc['types'] << 'pui_agent'
+      end
+
+      if ['resource'].include?(doc['primary_type'])
+        doc['types'] << 'pui_collection'
+      elsif ['classification'].include?(doc['primary_type'])
+        doc['types'] << 'pui_record_group'
+      elsif ['agent_person'].include?(doc['primary_type'])
+        doc['types'] << 'pui_person'
+      elsif doc['primary_type'] == 'top_container'
+        doc['types'] << 'pui_container'
       end
     }
 
@@ -115,7 +142,23 @@ class PUIIndexer < PeriodicIndexer
   end
 
   def skip_index_record?(record)
-    published = record['record']['publish']
+    published = !!record['record']['publish']
+
+    if record['record'].has_key?('has_unpublished_ancestor') && !!record['record']['has_unpublished_ancestor']
+      published = false
+    end
+
+    if record['record'].has_key?('has_unpublished_ancestor') && !!record['record']['has_unpublished_ancestor']
+      published = false
+    end
+
+    if record['record'].has_key?('used_within_published_repositories') && !record['record']['used_within_published_repositories']
+      published = false
+    end
+
+    if record['record'].has_key?('is_linked_to_published_record') && !record['record']['is_linked_to_published_record']
+      published = false
+    end
 
     stage_unpublished_for_deletion("#{record['record']['uri']}#pui") unless published
 

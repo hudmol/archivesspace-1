@@ -913,9 +913,6 @@ class IndexerCommon
 
         doc['title_sort'] ||= clean_for_sort(doc['title'])
 
-        # do this last of all so we know for certain the doc is published
-        apply_pui_fields(doc, record)
-
         next if skip_index_doc?(doc)
 
         batch << clean_whitespace(doc)
@@ -1009,46 +1006,6 @@ class IndexerCommon
 
   def skip_index_doc?(doc)
     false
-  end
-
-  def apply_pui_fields(doc, record)
-    # only add pui types if the record is published
-    if doc['publish']
-      object_record_types = ['accession', 'digital_object', 'digital_object_component']
-
-      if object_record_types.include?(doc['primary_type'])
-        doc['types'] << 'pui_record'
-      end
-
-      if ['agent_person', 'agent_corporate_entity'].include?(doc['primary_type'])
-        doc['types'] << 'pui_agent'
-      end
-
-      unless RecordInheritance.has_type?(doc['primary_type'])
-        # All record types are available to PUI except archival objects, since
-        # our pui_indexer indexes a specially formatted version of those.
-        if ['resource'].include?(doc['primary_type'])
-          doc['types'] << 'pui_collection'
-        elsif ['classification'].include?(doc['primary_type'])
-          doc['types'] << 'pui_record_group'
-        elsif ['agent_person'].include?(doc['primary_type'])
-          doc['types'] << 'pui_person'
-        else
-          doc['types'] << 'pui_' + doc['primary_type']
-        end
-
-        doc['types'] << 'pui'
-      end
-    end
-
-    # index all top containers for pui
-    if doc['primary_type'] == 'top_container'
-      doc['publish'] = record['record']['is_linked_to_published_record']
-      if doc['publish']
-        doc['types'] << 'pui_container'
-        doc['types'] << 'pui'
-      end
-    end
   end
 end
 
