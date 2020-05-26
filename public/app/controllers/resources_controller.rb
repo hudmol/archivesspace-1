@@ -114,8 +114,8 @@ class ResourcesController < ApplicationController
       redirect_back(fallback_location: @base_search)
     else
       process_search_results(@base_search)
-      title = ''
-      title =  strip_mixed_content(@results['results'][0]['_resolved_resource']['json']['title']) if @results['results'][0] &&  @results['results'][0].dig('_resolved_resource', 'json')
+      resource =  archivesspace.get_record(res_id)
+      title = resource.display_string
 
       @context = []
       @context.push({:uri => "/repositories/#{repo_id}",
