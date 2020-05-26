@@ -28,7 +28,7 @@ class ResourcesController < ApplicationController
     op: [''],
     field: ['title']
   }
-  DEFAULT_RES_TYPES = %w{pui_archival_object pui_digital_object agent subject}
+  DEFAULT_RES_TYPES = %w{pui_collection pui_archival_object pui_digital_object agent subject}
 
   # present a list of resources.  If no repository named, just get all of them.
   def index
@@ -93,7 +93,7 @@ class ResourcesController < ApplicationController
     res_id = "/repositories/#{repo_id}/resources/#{params.require(:id)}"
     search_opts = DEFAULT_RES_SEARCH_OPTS
     search_opts['fq'] = ["resource:\"#{res_id}\""]
-    search_opts['fq'] = AdvancedQueryBuilder.new.and('resource', res_id)
+    search_opts['fq'] = AdvancedQueryBuilder.new.and('resource', res_id).or('uri', res_id)
     params[:res_id] = res_id
 #    q = params.fetch(:q,'')
     unless params.fetch(:q,nil)
