@@ -8,7 +8,6 @@ require 'sprockets/railtie'
 require 'java'
 require 'config/config-distribution'
 require 'asutils'
-require 'aspace_i18n'
 
 require 'aspace_logger'
 
@@ -61,31 +60,15 @@ module ArchivesSpace
 
     config.log_formatter = ::Logger::Formatter.new
     logger = if AppConfig.changed?(:frontend_log)
-                      ASpaceLogger.new(AppConfig[:frontend_log])
-                    else
-                      ASpaceLogger.new($stderr)
-                    end
+               ASpaceLogger.new(AppConfig[:frontend_log])
+             else
+               ASpaceLogger.new($stderr)
+             end
     logger.formatter = config.log_formatter
     config.logger = ActiveSupport::TaggedLogging.new(logger)
 
 
     config.log_level = AppConfig[:frontend_log_level].intern
-
-    # Load the shared 'locales'
-    ASUtils.find_locales_directories.map{|locales_directory| File.join(locales_directory)}.reject { |dir| !Dir.exist?(dir) }.each do |locales_directory|
-      config.i18n.load_path += Dir[File.join(locales_directory, '**' , '*.{rb,yml}')].reject {|path| path =~ /public/}
-    end
-
-    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
-
-    config.i18n.load_path += Dir[File.join(ASUtils.find_base_directory, 'reports', '**', '*.yml')]
-
-    # Allow overriding of the i18n locales via the 'local' folder(s)
-    if not ASUtils.find_local_directories.blank?
-      ASUtils.find_local_directories.map{|local_dir| File.join(local_dir, 'frontend', 'locales')}.reject { |dir| !Dir.exist?(dir) }.each do |locales_override_directory|
-        config.i18n.load_path += Dir[File.join(locales_override_directory, '**' , '*.{rb,yml}')].reject {|path| path =~ /public/}
-      end
-    end
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
@@ -120,13 +103,13 @@ module ArchivesSpace
     end
 
     config.assets.precompile += [lambda do |filename, path|
-                                   # These are our two top-level stylesheets
-                                   # that pull the other stuff in.  Precompile
-                                   # them.
-                                   (path =~ /themes\/.*?\/(application|bootstrap)\.less/ ||
-                                    path =~ /archivesspace\/rde\.less/ ||
-                                    path =~ /archivesspace\/largetree\.less/)
-                                 end]
+      # These are our two top-level stylesheets
+      # that pull the other stuff in.  Precompile
+      # them.
+      (path =~ /themes\/.*?\/(application|bootstrap)\.less/ ||
+        path =~ /archivesspace\/rde\.less/ ||
+        path =~ /archivesspace\/largetree\.less/)
+    end]
 
     if not ASUtils.find_local_directories.blank?
       ASUtils.find_local_directories.map{|local_dir| File.join(local_dir, 'frontend', 'assets')}.reject { |dir| !Dir.exist?(dir) }.each do |static_directory|

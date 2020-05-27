@@ -1,4 +1,4 @@
-require 'aspace_i18n_enumeration_support'
+require 'aspace_i18n'
 require 'mixed_content_parser'
 
 # Disable I18n caching in dev mode
@@ -9,6 +9,8 @@ if Rails.env == 'development'
     end
   end
 end
+
+I18n.aspace_load_path(:rails_context)
 
 module I18n
 
