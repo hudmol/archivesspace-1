@@ -349,11 +349,45 @@
   </target>
 
 
-  <target name="solr:war" depends="set-classpath, bootstrap-downloads" description="Repack the Solr .war file with our configs">
+  <target name="solr:war" depends="set-classpath, bootstrap-downloads, solr:build-extensions" description="Repack the Solr .war file with our configs">
     <copy file="${solr_file}" tofile="solr.war" overwrite="true" />
     <war destfile="solr.war" update="true">
       <zipfileset dir="../solr" prefix="WEB-INF/classes"/>
+      <zipfileset file="../solr/extensions/archivesspace.jar" prefix="WEB-INF/lib"/>
     </war>
+  </target>
+
+  <!-- Custom Solr extensions -->
+  <target name="solr:build-extensions"
+          description="Build ArchivesSpace Solr extensions">
+    <mkdir dir="../solr/extensions/solr_libs" />
+    <unzip src="${solr_file}" dest="../solr/extensions/solr_libs">
+      <patternset>
+        <include name="WEB-INF/lib/lucene-analyzers-common-*.jar" />
+        <include name="WEB-INF/lib/solr-core-*.jar" />
+        <include name="WEB-INF/lib/lucene-core-*.jar" />
+      </patternset>
+    </unzip>
+
+    <mkdir dir="../solr/extensions/target" />
+    <javac srcdir="../solr/extensions/src/java"
+           destdir="../solr/extensions/target"
+           fork="true"
+           includeantruntime="false">
+           <compilerarg value="-Xlint"/>
+      <classpath>
+        <fileset dir="../solr/extensions/solr_libs">
+          <include name="**/*.jar"/>
+        </fileset>
+      </classpath>
+    </javac>
+
+    <jar jarfile="../solr/extensions/archivesspace.jar">
+      <fileset dir="../solr/extensions/target" />
+    </jar>
+
+    <delete dir="../solr/extensions/solr_libs" />
+    <delete dir="../solr/extensions/target" />
   </target>
 
 
