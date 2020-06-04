@@ -2,7 +2,7 @@ function ResizableSidebar($sidebar) {
     this.$sidebar = $sidebar;
 
     this.$row = $sidebar.closest('.row');
-    this.$content_pane = this.$row.find('> .col-sm-9');
+    this.$content_pane = this.$row.find('> .col-sm-8');
 
     if (this.$content_pane.length == 0) {
         // only do things if there's a content pane and a sidebar
