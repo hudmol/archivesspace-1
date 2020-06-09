@@ -57,6 +57,10 @@ ResizableSidebar.prototype.bind_events = function() {
     }).on('mouseup', function (e) {
         self.isResizing = false;
     });
+
+    $(window).on('resize', function(e) {
+        self.$content_pane.width(self.$row.width() - self.$sidebar.width() - 80);
+    });
 };
 
 $(function() {
