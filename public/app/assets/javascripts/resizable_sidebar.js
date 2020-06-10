@@ -59,8 +59,9 @@ ResizableSidebar.prototype.bind_events = function() {
     });
 
     $(window).on('resize', function(e) {
-        self.$content_pane.width(self.$row.width() - self.$sidebar.width() - 80);
-    });
+        // row/content_pane margins/paddings/borders ~= 40
+        self.$content_pane.width(self.$row.innerWidth() - self.$sidebar.outerWidth(true) - 40);
+    });    
 };
 
 $(function() {
