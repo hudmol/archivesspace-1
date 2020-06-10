@@ -96,6 +96,7 @@ class PUIIndexer < PeriodicIndexer
         # we're now done with the ancestors, so we can just delete them from the record
         record['record'].delete('ancestors')
         doc['fullrecord'] = IndexerCommon.build_fullrecord(record)
+        doc['fullrecord_published'] = IndexerCommon.build_fullrecord(record, published_only=true)
       end
     }
   end
