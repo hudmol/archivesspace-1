@@ -452,6 +452,7 @@
 
         button.find('.expandme-icon').addClass('expanded');
         $(button).data('expanded', true);
+        button.attr('aria-expanded', true);
 
         if (!row.data('uri')) {
             debugger;
@@ -478,9 +479,9 @@
         }
 
         var button = row.find('.expandme');
-
         $(button).data('expanded', false);
         button.find('.expandme-icon').removeClass('expanded');
+        button.attr('aria-expanded', false);
 
         /* Removing elements might have scrolled something else into view */
         setTimeout(function () {
@@ -573,6 +574,7 @@
 
             row.data('uri', rootNode.uri);
             row.attr('id', TreeIds.uri_to_tree_id(rootNode.uri));
+            row.attr('aria-level', 1);
             row.addClass('root-row');
             row.data('level', 0);
             row.data('child_count', rootNode.child_count);
@@ -736,7 +738,7 @@
                 row.addClass('largetree-node indent-level-' + level);
                 row.data('level', level);
                 row.data('child_count', node.child_count);
-
+                row.attr('aria-level', level + 1);
                 var title = row.find('.title');
                 var strippedTitle = $("<div>").html(node.title).text();
                 title.append($('<a class="record-title" />').prop('href', TreeIds.link_url(node.uri)).text(node.title));
@@ -747,6 +749,10 @@
                 if (node.child_count === 0) {
                     ex.css('visibility', 'hidden');
                     ex.attr('aria-hidden', 'true');
+                }
+
+                if (node.child_count !== 0) {
+                    ex.attr('aria-haspopup', true).attr('aria-expanded', false);
                 }
 
                 self.renderer.add_node_columns(row, node);
