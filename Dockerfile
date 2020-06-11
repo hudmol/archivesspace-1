@@ -11,7 +11,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
     apt-get -y install --no-install-recommends \
       build-essential \
       git \
-      openjdk-8-jre-headless \
+      openjdk-8* \
       wget \
       unzip
 
