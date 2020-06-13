@@ -3,10 +3,6 @@ class RepositoriesController < ApplicationController
   helper_method :process_repo_info
   skip_before_action  :verify_authenticity_token
 
-  before_action(:only => [:show, :search]) {
-    process_slug_or_id(params)
-  }
-
   DEFAULT_SEARCH_FACET_TYPES = ['primary_type', 'subjects', 'published_agents']
   DEFAULT_REPO_SEARCH_OPTS = {
      'sort' => 'title_sort asc',

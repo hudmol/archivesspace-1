@@ -3,10 +3,6 @@ class AgentsController <  ApplicationController
 
   skip_before_action  :verify_authenticity_token
 
-  before_action(:only => [:show]) {
-    process_slug_or_id(params)
-  }
-
   DEFAULT_AG_TYPES = %w{repository resource accession archival_object digital_object classification}
   DEFAULT_AG_FACET_TYPES = %w{primary_type subjects}
   DEFAULT_AG_SEARCH_OPTS = {

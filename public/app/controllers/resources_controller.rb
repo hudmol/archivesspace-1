@@ -6,10 +6,6 @@ class ResourcesController < ApplicationController
 
   skip_before_action  :verify_authenticity_token
 
-  before_action(:only => [:show]) {
-    process_slug_or_id(params)
-  }
-
   DEFAULT_RES_FACET_TYPES = %w{primary_type subjects published_agents}
   DEFAULT_RES_INDEX_OPTS = {
     'resolve[]' => ['repository:id', 'resource:id@compact_resource', 'top_container_uri_u_sstr:id'],
