@@ -14,9 +14,16 @@ $(function() {
       if ($this.hasClass("initialised") || $this.hasClass("too-many") ) {
         return;
       }
-        
 
-      var index = $(".subrecord-form-fields", $this).length;
+      // the previous subrecord-form-fields count was often too low when editing a list, however, which meant that lists often had items overwritten...  lost forever!
+      // e.g. list items 0-9, could be appended with new list items 7-11, erasing the three items in positions 7-9 of the original list.
+      // but if we append something like items 22-26 to the same list, the new list will wind up with 15 items, 0-14, without anything being deleted.
+    //  var index = $(".subrecord-form-fields", $this).length;
+
+      // the following gives too high a count, but the backend will adjust the indices once posted.
+      // to get counts that would always make sense based on the current data-index numbers, there might need to be some additional conditions for the assignment (e.g. if template is X, then...)
+      // but, as long as all of the notes have wrappers, the following should hopefully always work.
+      var index = $(".subrecord-form-wrapper", $this).length;
 
       var initialisers = {}
 
@@ -374,14 +381,14 @@ $(function() {
       if ($target_subrecord_list.children("li").length > 1) {
         $(".subrecord-form-heading:first .btn.apply-note-order", $this).removeAttr("disabled");
       }
-     
+
       var initRemoveActions = function() {
         $(".subrecord-form-inline", $this).each(function() {
           initRemoveActionForSubRecord($(this));
         });
-      } 
+      }
 
-      var initNoteForms = function($noteForm ) { 
+      var initNoteForms = function($noteForm ) {
         // initialising forms
         var $list = $("ul.subrecord-form-list:first", $this)
         AS.initSubRecordSorting($list);
