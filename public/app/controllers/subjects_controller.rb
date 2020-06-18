@@ -17,6 +17,10 @@ class SubjectsController <  ApplicationController
     :field => ['title']
   }
 
+  before_action(:only => [:show]) {
+    process_slug_or_id(params)
+  }
+  
   def index
     repo_id = params.fetch(:rid, nil)
     if !params.fetch(:q, nil)
