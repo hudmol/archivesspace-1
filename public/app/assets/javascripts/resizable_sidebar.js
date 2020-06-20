@@ -64,7 +64,7 @@ ResizableSidebar.prototype.bind_events = function() {
         if ($(window).width() >= 1000) {
           self.$content_pane.width(self.$row.innerWidth() - self.$sidebar.outerWidth(true) - 40);
         } else {
-          self.$content_pane.width(self.$row.innerWidth());
+          self.$content_pane.width(self.$row.innerWidth() - 10);
         };
 
     });
