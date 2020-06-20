@@ -60,8 +60,14 @@ ResizableSidebar.prototype.bind_events = function() {
 
     $(window).on('resize', function(e) {
         // row/content_pane margins/paddings/borders ~= 40
-        self.$content_pane.width(self.$row.innerWidth() - self.$sidebar.outerWidth(true) - 40);
-    });    
+        // new attempt to fix the issue where the content_pane width was set too small when the sidebar was pushed down
+        if ($(window).width() >= 1000) {
+          self.$content_pane.width(self.$row.innerWidth() - self.$sidebar.outerWidth(true) - 40);
+        } else {
+          self.$content_pane.width(self.$row.innerWidth());
+        };
+
+    });
 };
 
 $(function() {
