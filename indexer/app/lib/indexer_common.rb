@@ -126,7 +126,12 @@ class IndexerCommon
     end
 
     doc.each do |key, val|
-      if %w(created_by last_modified_by system_mtime user_mtime json types create_time date_type jsonmodel_type publish extent_type language script system_generated suppressed source rules name_order).include?(key)
+      if IndexerCommonConfig.excluded_fields_from_keyword_search.include?(key)
+        # skipped!
+      elsif IndexerCommonConfig.excluded_typed_fields_from_keyword_search.fetch(doc['jsonmodel_type'], []).include?(key)
+        # skipped!
+      elsif published_only && IndexerCommonConfig.excluded_typed_fields_from_public_keyword_search.fetch(doc['jsonmodel_type'], []).include?(key)
+        # skipped!
       elsif key =~ /_enum_s$/
       elsif val.is_a?(String)
         text << "#{val} "
