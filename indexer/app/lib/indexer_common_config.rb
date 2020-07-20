@@ -1,3 +1,5 @@
+require 'set'
+
 class IndexerCommonConfig
 
   def self.record_types
@@ -68,6 +70,61 @@ class IndexerCommonConfig
 
       'creator'
     ]
+  end
+
+
+  def self.excluded_fields_from_keyword_search
+    @@excluded_fields_from_keyword_search ||= Set.new([
+      'created_by',
+      'last_modified_by',
+      'system_mtime',
+      'user_mtime',
+      'json',
+      'types',
+      'create_time',
+      'date_type',
+      'jsonmodel_type',
+      'publish',
+      'extent_type',
+      'language',
+      'script',
+      'system_generated',
+      'suppressed',
+      'source',
+      'rules',
+      'name_order',
+    ])
+
+    @@excluded_fields_from_keyword_search
+  end
+
+
+  def self.exclude_from_keyword_search(field_name)
+    excluded_fields_from_keyword_search << field_name
+  end
+
+
+  def self.excluded_typed_fields_from_keyword_search
+    @@excluded_typed_fields_from_keyword_search ||= {}
+    @@excluded_typed_fields_from_keyword_search
+  end
+
+
+  def self.exclude_from_keyword_search(jsonmodel_type, field_name)
+    excluded_typed_fields_from_keyword_search[jsonmodel_type.to_s] ||= Set.new
+    excluded_typed_fields_from_keyword_search[jsonmodel_type.to_s] << field_name
+  end
+
+
+  def self.excluded_typed_fields_from_public_keyword_search
+    @@excluded_typed_fields_from_public_keyword_search ||= {}
+    @@excluded_typed_fields_from_public_keyword_search
+  end
+
+
+  def self.exclude_from_public_keyword_search(jsonmodel_type, field_name)
+    excluded_typed_fields_from_public_keyword_search[jsonmodel_type.to_s] ||= Set.new
+    excluded_typed_fields_from_public_keyword_search[jsonmodel_type.to_s] << field_name
   end
 
 end
