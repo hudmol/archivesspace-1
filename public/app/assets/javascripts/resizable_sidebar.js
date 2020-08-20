@@ -2,7 +2,7 @@ function ResizableSidebar($sidebar) {
     this.$sidebar = $sidebar;
 
     this.$row = $sidebar.closest('.row');
-    this.$content_pane = this.$row.find('> .col-sm-9');
+    this.$content_pane = $(this.$row.find('> div:not(.resizable-sidebar)')[0]);
 
     if (this.$content_pane.length == 0) {
         // only do things if there's a content pane and a sidebar
@@ -35,6 +35,11 @@ ResizableSidebar.prototype.bind_events = function() {
         self.lastDownX = e.clientX;
     });
 
+    self.$handle.on('dragstart', function (e) {
+        e.preventDefault();
+        return false;
+    });
+
     $(document).on('mousemove', function (e) {
         if (!self.isResizing) {
             return;
@@ -56,6 +61,21 @@ ResizableSidebar.prototype.bind_events = function() {
         }
     }).on('mouseup', function (e) {
         self.isResizing = false;
+    });
+
+    $(window).on('blur', function(e) {
+        self.isResizing = false;
+    });
+
+    $(window).on('resize', function(e) {
+        // row/content_pane margins/paddings/borders ~= 40
+        // new attempt to fix the issue where the content_pane width was set too small when the sidebar was pushed down
+        if ($(window).width() >= 992) {
+            self.$content_pane.width(self.$row.innerWidth() - self.$sidebar.outerWidth(true) - 40);
+        } else {
+            self.$content_pane.width(self.$row.innerWidth() - 10);
+        };
+
     });
 };
 
