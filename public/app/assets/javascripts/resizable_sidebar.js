@@ -35,6 +35,11 @@ ResizableSidebar.prototype.bind_events = function() {
         self.lastDownX = e.clientX;
     });
 
+    self.$handle.on('dragstart', function (e) {
+        e.preventDefault();
+        return false;
+    });
+
     $(document).on('mousemove', function (e) {
         if (!self.isResizing) {
             return;
@@ -56,6 +61,10 @@ ResizableSidebar.prototype.bind_events = function() {
         }
     }).on('mouseup', function (e) {
         self.isResizing = false;
+    });
+
+    $(window).on('blur', function(e) {
+      self.isResizing = false;
     });
 
     $(window).on('resize', function(e) {
