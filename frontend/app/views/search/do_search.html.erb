@@ -9,20 +9,6 @@
       title << " in #{params[:type].map{|t| I18n.t("#{t}._plural")}.join(",")}"
     end
   end
-
-  if @search_data.results? && @search_data['results'].any?{|result| result['has_digital_objects']}
-    add_column(
-        "Thumbnail",
-        proc {|record|
-          json = ASUtils.json_parse(record['json'])
-          if thumbnail_available?(json)
-            render_aspace_partial(:partial => "digital_objects/thumbnail_for_file_version", :locals => {:file_version => fetch_thumbnail(json)})
-          end
-        },
-        :sortable => false, :class => 'thumbnail-col'
-    )
-  end
-
 %>
 
 <%= setup_context :title => title %>

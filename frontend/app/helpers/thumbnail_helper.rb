@@ -48,4 +48,26 @@ module ThumbnailHelper
 
     result
   end
+
+
+  def digital_objects_in_search_results?
+    @search_data && @search_data.results? && @search_data['results'].any? do |result|
+      result['has_digital_objects'] || ['digital_object', 'digital_object_component'].include?(result['primary_type'])
+    end
+  end
+
+  def add_thumbnail_column
+    return if @force_disable_thumbnail_column
+
+    add_column(
+      "Thumbnail",
+      proc {|record|
+        json = ASUtils.json_parse(record['json'])
+        if thumbnail_available?(json)
+          render_aspace_partial(:partial => "digital_objects/thumbnail_for_file_version", :locals => {:file_version => fetch_thumbnail(json)})
+        end
+      },
+      :sortable => false, :class => 'thumbnail-col'
+    )
+  end
 end
