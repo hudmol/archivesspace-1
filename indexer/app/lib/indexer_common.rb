@@ -525,6 +525,8 @@ class IndexerCommon
                                         collect{|instance| instance["digital_object"]}.compact.
                                         collect{|digital_object_instance| digital_object_instance["ref"]}.
                                         flatten.uniq
+
+        doc['has_digital_objects'] = !doc['digital_object_uris'].empty?
       end
     }
 
