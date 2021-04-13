@@ -41,6 +41,8 @@ module HandleFaceting
       else
         pv = repos[v]['name'] || v
       end
+    elsif k == 'has_published_digital_objects'
+      pv = v ? 'Contains digital materials' : 'Does not contain digital materials'
     end
     pv
   end

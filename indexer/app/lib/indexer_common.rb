@@ -749,6 +749,13 @@ class IndexerCommon
         doc['title_sort'] = doc['assessment_id'].to_s.rjust(10, '0')
       end
     }
+
+    add_document_prepare_hook {|doc, record|
+      if record['record']['has_published_digital_objects']
+        doc['has_published_digital_objects'] = true
+      end
+    }
+
   end
 
 

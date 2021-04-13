@@ -127,7 +127,13 @@
         "type" => "JSONModel(:ark_name) object",
         "readonly" => true,
         "required" => false
-      }
+      },
+
+      "has_published_digital_objects" => {
+        "type" => "boolean",
+        "default" => false,
+        "readonly" => true,
+      },
 
     },
   },
