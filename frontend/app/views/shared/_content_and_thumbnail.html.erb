@@ -1,0 +1,12 @@
+<% if thumbnail_available?(record) %>
+  <div class="row">
+    <div class="col-sm-8">
+      <%= content %>
+    </div>
+    <div class="col-sm-4">
+      <%= render_aspace_partial :partial => "digital_objects/thumbnail_for_file_version", :locals => {:file_version => fetch_thumbnail(record)} %>
+    </div>
+  </div>
+<% else %>
+  <%= content %>
+<% end %>

@@ -1,0 +1,17 @@
+<% if defined?(:file_version) %>
+
+<div class="digital-object-thumbnail">
+  <%= link_to file_version.fetch('file_uri'), :target => '_blank' do %>
+    <% if file_version_is_image?(file_version) %>
+      <%= image_tag file_version.fetch('file_uri'), :alt => file_version.fetch('caption', 'Thumbnail') %>
+    <% else %>
+      FIXME icon goes here
+    <% end %>
+  <% end %>
+  <% if file_version.fetch('caption', false) %>
+    <div class="digital-object-thumbnail-caption"><%= file_version.fetch('caption') %></div>
+  <% end %>
+</div>
+
+<div class="clearfix"></div>
+<% end %>
