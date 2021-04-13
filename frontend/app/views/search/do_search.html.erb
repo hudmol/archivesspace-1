@@ -10,7 +10,7 @@
     end
   end
 
-  if @search_data.results? && @search_data['results'].any?{|result| ['digital_object', 'digital_object_component', 'archival_object'].include?(result['primary_type'])}
+  if @search_data.results? && @search_data['results'].any?{|result| result['has_digital_objects']}
     add_column(
         "Thumbnail",
         proc {|record|
