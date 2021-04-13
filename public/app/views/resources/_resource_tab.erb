@@ -8,6 +8,8 @@
          url = app_prefix("/repositories/#{params[:rid]}/resources/#{params[:id]}/collection_organization")
   		 when :inventory
          url = app_prefix("/repositories/#{params[:rid]}/resources/#{params[:id]}/inventory")
+  		 when :digital_materials
+         url = app_prefix("/repositories/#{params[:rid]}/resources/#{params[:id]}/digital_materials")
   		 end
   	%>
 

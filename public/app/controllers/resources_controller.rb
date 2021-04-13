@@ -152,6 +152,9 @@ class ResourcesController < ApplicationController
       @has_containers = has_containers?(uri)
 
       @result =  archivesspace.get_record(uri, @criteria)
+
+      @has_digital_objects = @result.json.fetch('has_published_digital_objects', false)
+
       @repo_info = @result.repository_information
       @page_title = "#{I18n.t('resource._singular')}: #{strip_mixed_content(@result.display_string)}"
       @context = [{:uri => @repo_info['top']['uri'], :crumb => @repo_info['top']['name']}, {:uri => nil, :crumb => process_mixed_content(@result.display_string)}]
@@ -181,6 +184,7 @@ class ResourcesController < ApplicationController
       @criteria['resolve[]']  = ['repository:id', 'resource:id@compact_resource', 'top_container_uri_u_sstr:id', 'related_accession_uris:id']
       @result =  archivesspace.get_record(@root_uri, @criteria)
       @has_containers = has_containers?(@root_uri)
+      @has_digital_objects = @result.json.fetch('has_published_digital_objects', false)
 
       @repo_info = @result.repository_information
       @page_title = "#{I18n.t('resource._singular')}: #{strip_mixed_content(@result.display_string)}"
@@ -268,6 +272,7 @@ class ResourcesController < ApplicationController
 		@criteria = {}
 		@criteria['resolve[]']  = ['repository:id', 'resource:id@compact_resource', 'top_container_uri_u_sstr:id', 'related_accession_uris:id']
 		@result =  archivesspace.get_record(uri, @criteria)
+                @has_digital_objects = @result.json.fetch('has_published_digital_objects', false)
 		@repo_info = @result.repository_information
 		@page_title = "#{I18n.t('resource._singular')}: #{strip_mixed_content(@result.display_string)}"
 		@context = [{:uri => @repo_info['top']['uri'], :crumb => @repo_info['top']['name']}, {:uri => nil, :crumb => process_mixed_content(@result.display_string)}]
@@ -284,6 +289,34 @@ class ResourcesController < ApplicationController
 		end
 
 	rescue RecordNotFound
+    record_not_found(uri, 'resource')
+  end
+
+  def digital_materials
+    uri = "/repositories/#{params[:rid]}/resources/#{params[:id]}"
+    tree_root = archivesspace.get_raw_record(uri + '/tree/root') rescue nil
+    @has_children = tree_root && tree_root['child_count'] > 0
+    # stuff for the collection bits
+    @criteria = {}
+    @criteria['resolve[]']  = ['repository:id', 'resource:id@compact_resource', 'top_container_uri_u_sstr:id', 'related_accession_uris:id']
+    @result =  archivesspace.get_record(uri, @criteria)
+    @has_digital_objects = @result.json.fetch('has_published_digital_objects', false)
+    @repo_info = @result.repository_information
+    @page_title = "#{I18n.t('resource._singular')}: #{strip_mixed_content(@result.display_string)}"
+    @context = [{:uri => @repo_info['top']['uri'], :crumb => @repo_info['top']['name']}, {:uri => nil, :crumb => process_mixed_content(@result.display_string)}]
+    fill_request_info
+
+    # top container stuff ... sets @records
+    fetch_digital_materials(uri, "#{uri}/digital_materials", params)
+
+    if !@results.blank?
+      params[:q] = '*'
+      @pager =  Pager.new(@base_search, @results['this_page'], @results['last_page'])
+    else
+      @pager = nil
+    end
+
+  rescue RecordNotFound
     record_not_found(uri, 'resource')
   end
 
@@ -318,5 +351,23 @@ class ResourcesController < ApplicationController
       @results = []
     end
   end
+
+  def fetch_digital_materials(resource_uri, page_uri, params)
+    qry = "(resource:\"#{resource_uri}\" OR uri:\"#{resource_uri}\") AND has_published_digital_objects:true"
+    @base_search = "#{page_uri}?"
+
+    set_up_search(['pui'], ObjectsController::DEFAULT_OBJ_FACET_TYPES + DEFAULT_RES_FACET_TYPES, {}, params, qry)
+    @base_search= @base_search.sub("q=#{qry}", '')
+    page = Integer(params.fetch(:page, "1"))
+
+    @results = archivesspace.search(@query, page, @criteria)
+
+    if @results['total_hits'] > 0
+      process_search_results(@base_search)
+    else
+      @results = []
+    end
+  end
+
 
 end
