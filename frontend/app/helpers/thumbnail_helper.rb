@@ -37,7 +37,11 @@ module ThumbnailHelper
     if record['jsonmodel_type'] == 'archival_object'
       record['instances'].each do |instance|
         if instance['instance_type'] == 'digital_object'
-          result += ASUtils.wrap(instance['digital_object']['_resolved']['file_versions'])
+          if instance['is_representative']
+            return ASUtils.wrap(instance['digital_object']['_resolved']['file_versions'])
+          else
+            result += ASUtils.wrap(instance['digital_object']['_resolved']['file_versions'])
+          end
         end
       end
     elsif record['file_versions']
