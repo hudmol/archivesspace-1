@@ -5,7 +5,7 @@
     <% if file_version_is_image?(file_version) %>
       <%= image_tag file_version.fetch('file_uri'), :alt => file_version.fetch('caption', 'Thumbnail') %>
     <% else %>
-      FIXME icon goes here
+      <%= content_tag(:i, nil, {:title => file_version.fetch('caption', 'Thumbnail'), :class => 'digital-object-thumbnail-icon glyphicon glyphicon-open-file'}) %>
     <% end %>
   <% end %>
   <% if file_version.fetch('caption', false) %>
