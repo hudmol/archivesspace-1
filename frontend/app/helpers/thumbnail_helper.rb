@@ -18,8 +18,16 @@ module ThumbnailHelper
   end
 
   def file_version_is_image?(file_version)
-    # FIXME otherwise show an icon?
-    true
+    begin
+      uri = URI(file_version['file_uri'])
+      if ['jpeg', 'gif'].include?(file_version['file_format_name']) && FileEmbedHelper.supported_scheme?(uri.scheme)
+        true
+      else
+        false
+      end
+    rescue
+      false
+    end
   end
 
   def fetch_file_versions(record)
