@@ -104,6 +104,7 @@ class SearchResultData
     return I18n.t("enumerations.event_event_type.#{facet.to_s}", :default => facet) if facet_group === "event_type"
     return I18n.t("enumerations.event_outcome.#{facet.to_s}", :default => facet) if facet_group === "outcome"
     return I18n.t("enumerations.subject_term_type.#{facet.to_s}", :default => facet) if facet_group === "first_term_type"
+    return I18n.t("boolean.#{facet.to_s}", :default => facet) if facet_group === "has_digital_objects"
 
     return I18n.t("enumerations.language_iso639_2.#{facet}", :default => facet) if facet_group === "langcode"
 
@@ -253,7 +254,7 @@ class SearchResultData
   end
 
   def self.BASE_FACETS
-    ["primary_type","creators","subjects","langcode"]
+    ["primary_type","creators","subjects","langcode", "has_digital_objects"]
   end
 
   def self.AGENT_FACETS
@@ -261,11 +262,11 @@ class SearchResultData
   end
 
   def self.ACCESSION_FACETS
-    ["subjects", "accession_date_year", "creators"]
+    ["subjects", "accession_date_year", "creators", "has_digital_objects"]
   end
 
   def self.RESOURCE_FACETS
-    ["subjects", "publish", "level", "classification_path", "primary_type", "langcode"]
+    ["subjects", "publish", "level", "classification_path", "primary_type", "langcode", "has_digital_objects"]
   end
 
   def self.DIGITAL_OBJECT_FACETS
