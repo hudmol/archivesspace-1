@@ -28,10 +28,23 @@
 
 #tabledSearchResults {
   .thumbnail-col {
-    width: 240px;
+    width: 80px;
   }
   .digital-object-thumbnail {
     float: none;
+    border: none;
+    min-width: 80px;
+
+    img {
+      object-fit: cover;
+      object-position: center;
+      height: 80px;
+      width: 80px;
+    }
+
+    .digital-object-thumbnail-caption {
+      display: none;
+    }
   }
 }
 
