@@ -1,4 +1,4 @@
-<% if defined?(:file_version) %>
+<% if defined?(:file_version) && !file_version.nil? %>
 
 <div class="digital-object-thumbnail">
   <%= link_to file_version.fetch('file_uri'), :target => '_blank' do %>
