@@ -676,3 +676,6 @@ AppConfig[:pui_scroll_view_notes_order] = ['scopecontent',
                                            'arrangement',
                                            'originalsloc',
                                            'relatedmaterial']
+
+# A File Version is considered a thumbnail candidate if its file_format_names matches one of the following values
+AppConfig[:thumbnail_file_format_names] = ['jpeg', 'gif']
