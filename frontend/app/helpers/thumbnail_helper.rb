@@ -20,7 +20,7 @@ module ThumbnailHelper
   def file_version_is_image?(file_version)
     begin
       uri = URI(file_version['file_uri'])
-      if ['jpeg', 'gif'].include?(file_version['file_format_name']) && FileEmbedHelper.supported_scheme?(uri.scheme)
+      if AppConfig[:thumbnail_file_format_names].include?(file_version['file_format_name']) && FileEmbedHelper.supported_scheme?(uri.scheme)
         true
       else
         false
