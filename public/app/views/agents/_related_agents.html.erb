@@ -12,7 +12,8 @@
     <% relationships.each do |relationship| %>
       <% agent = relationship['_resolved'] %>
       <li>
-        <%= link_to agent['display_name']['sort_name'], app_prefix(agent['uri']) %>
+        <%# added the gsub part to deal with name/title agents.  remove if we ever find a proper fix for those headings. %>
+        <%= link_to agent['display_name']['sort_name'].gsub(/\$\w:\s/, ''), app_prefix(agent['uri']) %>
         (<%= I18n.t("enumerations.#{type}_relator.#{relationship['relator']}", :default => relationship['relator']) %>,
          <%= I18n.t("#{agent['jsonmodel_type']}._singular") %>)
          <% if relationship['description'] || ASUtils.wrap(relationship['dates']).length > 0 %>

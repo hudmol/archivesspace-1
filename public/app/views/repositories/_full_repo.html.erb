@@ -1,3 +1,5 @@
+<%# the plugin update for this page simply removes the font awesome icons for the phone numbers and email address
+(it also removes the YEE HAW comment :) ) %>
 <% if url && url!= "http://url.unspecified" %>
 <div class="website">
   <a href="<%= url %>"><%= url  %></a>
@@ -38,20 +40,22 @@
    <span class="telephone">
      <% if !phone['number'].blank? %>
        <% if !phone['number_type'].blank? && phone['number_type'].strip.upcase == 'FAX' %>
-       <i class="fa fa-fax"  aria-hidden="true"></i> <%= phone['number'] %> (<%= t('fax') %>)
+       <%= phone['number'] %> (<%= t('fax') %>)
        <% else %>
-       <i class="fa fa-phone" aria-hidden="true"></i> <%= phone['number'] %>
+       <%= phone['number'] %>
        <% end %>
      <% end %>
    </span><br/>
    <% end %>
 <% end %>
 
-<!-- YEE HAW -->
 <% if info["email"].present? %>
-<span class="email"><i class="fa fa-envelope" aria-hidden="true"></i> <a href="mailto:<%= info['email'] %>" title="<%= t('email') %>"><%= info['email'] %></a></span>
+<span class="email">
+  <a href="mailto:<%= info['email'] %>" title="<%= t('email') %>">
+    <%= info['email'] %>
+  </a>
+</span>
 <br/>
 <% end %>
 </div>
 <% end %>
-

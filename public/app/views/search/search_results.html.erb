@@ -3,20 +3,18 @@
   <div class="col-sm-12">
      <%= render partial: 'shared/breadcrumbs' %>
   <% if defined?(@search_title) %>
-  <h2><%= @search_title %></h2>
+  <h1><%= @search_title %></h1>
   <% end %>
 
   <% if defined?(@reset) && @reset %>
       <%= render partial: 'shared/search', locals: {:search_url => @base_search,
                                                     :title => t('archive._plural'),
                                                     :limit_options => [["#{t('actions.search')} #{t('search-limits.all')}",''],
-                                                                       [t('search-limit', :limit => t('search-limits.resources')),'resource'],
-                                                                       [t('search-limit', :limit => t('search-limits.digital')),'digital_object']],
+                                                                       [t('search-limit', :limit => t('search-limits.resources')),'resource']],
                                                     :field_options => [["#{t('search_results.filter.fullrecord')}",''],
                                                                        ["#{t('search_results.filter.title')}",'title'],
                                                                        ["#{t('search_results.filter.creators')}",'creators_text'],
                                                                        ["#{t('search_results.filter.subjects')}",'subjects_text'],
-                                                                       ["#{t('search_results.filter.notes')}", 'notes_published'],
                                                                        ["#{t('search_results.filter.identifier')}", 'four_part_id'] ],
                                                     :header_size => '2',
                                                     :show_header => true } %>
@@ -37,13 +35,11 @@
         <%= render partial: 'shared/search', locals: {:search_url => @base_search,
                                                       :title => t('archive._plural'),
                                                       :limit_options => [["#{t('actions.search')} #{t('search-limits.all')}",''],
-                                                                         [t('search-limit', :limit => t('search-limits.resources')),'resource'],
-                                                                         [t('search-limit', :limit => t('search-limits.digital')),'digital_object']],
+                                                                         [t('search-limit', :limit => t('search-limits.resources')),'resource']],
                                                       :field_options => [["#{t('search_results.filter.fullrecord')}",''],
                                                                          ["#{t('search_results.filter.title')}",'title'],
                                                                          ["#{t('search_results.filter.creators')}",'creators_text'],
                                                                          ["#{t('search_results.filter.subjects')}",'subjects_text'],
-                                                                         ["#{t('search_results.filter.notes')}", 'notes_published'],
                                                                          ["#{t('search_results.filter.identifier')}", 'four_part_id'] ],
                                                       :show_header => false } %>
       </div>
@@ -51,15 +47,34 @@
   <% end %>
 
   <% if defined?(@results) %>
-  <h2><%= t('search_results.results_head', {:type => results_type, :start => @results['offset_first'],
-         :end => @results['offset_last'], :total => @results['total_hits'] })  %></h2>
+  <h1><%= t('search_results.results_head', {:type => results_type, :start => @results['offset_first'],
+         :end => @results['offset_last'], :total => @results['total_hits'] })  %></h1>
   <% end %>
   <% end %>
   </div>
 </div>
 
+<%#  mdc: new stuff, per S&E group %>
+<% if ['Subjects', 'Names'].include?(@results_type) %>
+<div class="row">
+  <div class="col-sm-12">
+    <% if @results_type == 'Subjects' %>
+     <%= t('brand.subject_intro').html_safe %>
+    <% elsif @results_type == 'Names' %>
+     <%= t('brand.agent_intro').html_safe %>
+    <% end %>
+  </div>
+</div>
+<% end %>
+
 <% if defined?(@results) %>
 <div class="row">
+  <%#  mdc: put facets first %>
+  <div class="col-sm-3">
+    <a name="filter" title="<%= t('internal_links.filter') %>"></a>
+    <%= render partial: 'shared/facets' %>
+  </div>
+
   <div class="col-sm-9">
     <a name="main" title="<%= t('internal_links.main') %>"></a>
     <div class="row"><div class="col-sm-8">
@@ -80,10 +95,7 @@
     <%= render partial: 'shared/pagination', locals: {:pager  => @pager, :pager_id => 'paging_bottom'}  %>
     </div></div>
   </div>
-  <div class="col-sm-3">
-    <a name="filter" title="<%= t('internal_links.filter') %>"></a>
-    <%= render partial: 'shared/facets' %>
-  </div>
+
 
 </div>
 <% end %>
