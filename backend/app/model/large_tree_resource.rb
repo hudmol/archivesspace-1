@@ -1,26 +1,15 @@
 class LargeTreeResource
 
-  def root(response, root_record)
+  def initialize(opts = {})
+    @published_only = opts.fetch(:published_only, false)
+  end
+
+  def root(response, root_record, opts = {})
     response['level'] = root_record.other_level || root_record.level
 
     # Collect all container data
-    Instance
-      .left_join(:sub_container, :sub_container__instance_id => :instance__id)
-      .left_join(:top_container_link_rlshp, :sub_container_id => :sub_container__id)
-      .left_join(:top_container, :id => :top_container_link_rlshp__top_container_id)
-      .left_join(Sequel.as(:enumeration_value, :top_container_type), :id => :top_container__type_id)
-      .left_join(Sequel.as(:enumeration_value, :type_2), :id => :sub_container__type_2_id)
-      .left_join(Sequel.as(:enumeration_value, :type_3), :id => :sub_container__type_3_id)
-      .left_join(Sequel.as(:enumeration_value, :instance_type), :id => :instance__instance_type_id)
-      .filter(:resource_id => root_record.id)
-      .select(Sequel.as(:instance_type__value, :instance_type),
-              Sequel.as(:top_container_type__value, :top_container_type),
-              Sequel.as(:top_container__indicator, :top_container_indicator),
-              Sequel.as(:top_container__barcode, :top_container_barcode),
-              Sequel.as(:type_2__value, :type_2),
-              Sequel.as(:sub_container__indicator_2, :indicator_2),
-              Sequel.as(:type_3__value, :type_3),
-              Sequel.as(:sub_container__indicator_3, :indicator_3))
+    #
+    instance_query(:resource, root_record.id)
     .each do |row|
         response['containers'] ||= []
 
@@ -40,11 +29,13 @@ class LargeTreeResource
     response
   end
 
-  def node(response, node_record)
+  def node(response, node_record, opts = {})
     response
   end
 
-  def waypoint(response, record_ids)
+  def waypoint(response, record_ids, opts = {})
+    published_only = opts.fetch(:published_only, false)
+
     # Load the instance type and record level
     ArchivalObject
       .left_join(Sequel.as(:enumeration_value, :level_enum), :id => :archival_object__level_id)
@@ -87,24 +78,7 @@ class LargeTreeResource
     end
 
     # Display container information
-    Instance
-      .left_join(:sub_container, :sub_container__instance_id => :instance__id)
-      .left_join(:top_container_link_rlshp, :sub_container_id => :sub_container__id)
-      .left_join(:top_container, :id => :top_container_link_rlshp__top_container_id)
-      .left_join(Sequel.as(:enumeration_value, :top_container_type), :id => :top_container__type_id)
-      .left_join(Sequel.as(:enumeration_value, :type_2), :id => :sub_container__type_2_id)
-      .left_join(Sequel.as(:enumeration_value, :type_3), :id => :sub_container__type_3_id)
-      .left_join(Sequel.as(:enumeration_value, :instance_type), :id => :instance__instance_type_id)
-      .filter(:archival_object_id => record_ids)
-      .select(:archival_object_id,
-              Sequel.as(:instance_type__value, :instance_type),
-              Sequel.as(:top_container_type__value, :top_container_type),
-              Sequel.as(:top_container__indicator, :top_container_indicator),
-              Sequel.as(:top_container__barcode, :top_container_barcode),
-              Sequel.as(:type_2__value, :type_2),
-              Sequel.as(:sub_container__indicator_2, :indicator_2),
-              Sequel.as(:type_3__value, :type_3),
-              Sequel.as(:sub_container__indicator_3, :indicator_3))
+    instance_query(:archival_object, record_ids)
       .each do |row|
       id = row[:archival_object_id]
 
@@ -125,6 +99,43 @@ class LargeTreeResource
     end
 
     response
+  end
+
+  private
+
+  def instance_query(target_type, record_ids)
+    foreign_key = :"instance__#{target_type}_id"
+    query = Instance
+              .left_join(:sub_container, :sub_container__instance_id => :instance__id)
+              .left_join(:top_container_link_rlshp, :sub_container_id => :sub_container__id)
+              .left_join(:top_container, :id => :top_container_link_rlshp__top_container_id)
+              .left_join(Sequel.as(:enumeration_value, :top_container_type), :id => :top_container__type_id)
+              .left_join(Sequel.as(:enumeration_value, :type_2), :id => :sub_container__type_2_id)
+              .left_join(Sequel.as(:enumeration_value, :type_3), :id => :sub_container__type_3_id)
+              .left_join(Sequel.as(:enumeration_value, :instance_type), :id => :instance__instance_type_id)
+              .filter(foreign_key => record_ids)
+              .select(foreign_key,
+                      Sequel.as(:instance_type__value, :instance_type),
+                      Sequel.as(:top_container_type__value, :top_container_type),
+                      Sequel.as(:top_container__indicator, :top_container_indicator),
+                      Sequel.as(:top_container__barcode, :top_container_barcode),
+                      Sequel.as(:type_2__value, :type_2),
+                      Sequel.as(:sub_container__indicator_2, :indicator_2),
+                      Sequel.as(:type_3__value, :type_3),
+                      Sequel.as(:sub_container__indicator_3, :indicator_3))
+
+    if @published_only
+      query
+        .left_join(:instance_do_link_rlshp, :instance_do_link_rlshp__instance_id => :instance_id)
+        .left_join(:digital_object, :digital_object_id => :instance_do_link_rlshp__digital_object_id)
+        .filter(Sequel.|({:instance__publish => 1},
+                         Sequel.&(Sequel.~(:digital_object__id => nil),
+                                  Sequel.|({:instance_do_link_rlshp__suppressed => 0},
+                                           {:digital_object__publish => 1},
+                                           {:digital_object__suppressed => 0}))))
+    end
+
+    query
   end
 
 end

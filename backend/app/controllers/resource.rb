@@ -243,7 +243,7 @@ class ArchivesSpaceService < Sinatra::Base
     resource = Resource.get_or_die(params[:id])
 
     large_tree = LargeTree.new(resource, {:published_only => params[:published_only]}.merge(largetree_opts))
-    large_tree.add_decorator(LargeTreeResource.new)
+    large_tree.add_decorator(LargeTreeResource.new(:published_only => params[:published_only]))
 
     large_tree
   end
