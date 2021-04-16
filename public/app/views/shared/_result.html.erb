@@ -79,9 +79,7 @@ end
 <% end %>
     <%= render partial: 'shared/thumbnail', locals: {
         :result => result,
-        :props => props,
         :thumbnail_link => app_prefix(result.uri),
-        :only_show_images => true,
       }
     %>
     <div class="recordresult">

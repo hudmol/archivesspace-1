@@ -7,14 +7,14 @@
 
 <% if thumbnail = result.thumbnail %>
   <%
-    if defined?(:thumbnail_link)
+    if defined?(thumbnail_link)
       same_window = true
     else
       thumbnail_link = thumbnail.fetch('file_uri')
       same_window = false
     end
   %>
-  <% only_show_images = false unless defined?(:only_show_images) %>
+  <% only_show_images = false unless defined?(only_show_images) %>
   <% caption = thumbnail.fetch('caption', "Thumbnail for #{result.display_string}") %>
   <div class="pui-thumbnail">
     <pre style="display: none"><%= thumbnail.pretty_inspect %></pre>
@@ -25,7 +25,7 @@
         <% if only_show_images %>
           <div class="pui-thumbnail-spacer"></div>
         <% else %>
-          <%= content_tag(:i, nil, {:title => caption, :class => 'pui-thumbnail-icon fa fa-external-link-square'}) %>
+          <%= content_tag(:i, nil, {:title => caption, :class => 'pui-thumbnail-icon fa fa-th'}) %>
         <% end %>
       <% end %>
     <% end %>
