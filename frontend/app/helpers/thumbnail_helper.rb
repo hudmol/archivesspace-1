@@ -34,7 +34,7 @@ module ThumbnailHelper
     result = []
 
 
-    if record['jsonmodel_type'] == 'archival_object'
+    if ['resource', 'archival_object', 'accession'].include?(record['jsonmodel_type'])
       record['instances'].each do |instance|
         if instance['instance_type'] == 'digital_object'
           if instance['is_representative']
