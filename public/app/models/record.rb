@@ -83,6 +83,10 @@ class Record
     build_request_item
   end
 
+  def digital_objects?
+    Array(json['instances']).any?{|instance| instance['digital_object'] && instance.dig('digital_object', '_resolved', 'publish')}
+  end
+
   def thumbnail
     file_version_candidates = []
 
