@@ -13,6 +13,8 @@
 
   <div class="col-sm-9">
 
+  <%= render partial: 'shared/thumbnail', locals: {result: @result} %>
+
   <br/>
 
   <% if @result.content_description %>

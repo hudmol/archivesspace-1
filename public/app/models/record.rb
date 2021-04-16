@@ -86,7 +86,7 @@ class Record
   def thumbnail
     file_version_candidates = []
 
-    if ['resource', 'archival_object'].include?(@primary_type)
+    if ['resource', 'archival_object', 'accession'].include?(@primary_type)
       Array(json['instances']).each do |instance|
         if digital_object = instance.dig('digital_object', '_resolved')
           # skip unpublished digital objects
