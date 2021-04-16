@@ -89,6 +89,7 @@ class Record
     if ['resource', 'archival_object'].include?(@primary_type)
       Array(json['instances']).each do |instance|
         if digital_object = instance.dig('digital_object', '_resolved')
+          # skip unpublished digital objects
           next unless digital_object['publish']
 
           if instance['is_representative']
@@ -102,6 +103,9 @@ class Record
     else
       file_version_candidates = Array(json['file_versions'])
     end
+
+    # drop unpublished file versions
+    file_version_candidates.reject!{|fv| !fv['publish'] }
 
     return nil if file_version_candidates.empty?
 
