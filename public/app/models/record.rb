@@ -83,6 +83,34 @@ class Record
     build_request_item
   end
 
+  def thumbnail
+    file_version_candidates = []
+
+    if ['resource', 'archival_object'].include?(@primary_type)
+      Array(json['instances']).each do |instance|
+        if digital_object = instance.dig('digital_object', '_resolved')
+          next unless digital_object['publish']
+
+          if instance['is_representative']
+            file_version_candidates = Array(digital_object['file_versions'])
+            break
+          else
+            file_version_candidates += Array(digital_object['file_versions'])
+          end
+        end
+      end
+    else
+      file_version_candidates = Array(json['file_versions'])
+    end
+
+    return nil if file_version_candidates.empty?
+
+    result = file_version_candidates.detect{|fv| fv['is_representative']}
+    result ||= file_version_candidates.detect{|fv| fv['use_statement'] == 'image-thumbnail'}
+    result ||= file_version_candidates.first
+    result
+  end
+
   private
 
   def parse_full_title
