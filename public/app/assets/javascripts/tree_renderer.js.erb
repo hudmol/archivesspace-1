@@ -48,8 +48,8 @@
         $link.html(rootNode.parsed_title);
 
         if (rootNode.containers) {
-            let hasDigitalObject = false;
-            for (let i=0; i<rootNode.containers.length; i++) {
+            var hasDigitalObject = false;
+            for (var i=0; i<rootNode.containers.length; i++) {
                 if (rootNode.containers[i].instance_type === 'digital_object') {
                     hasDigitalObject = true;
                 }
@@ -77,8 +77,8 @@
             $link.html(title);
 
             if (node.containers) {
-                let hasDigitalObject = false;
-                for (let i=0; i<node.containers.length; i++) {
+                var hasDigitalObject = false;
+                for (var i=0; i<node.containers.length; i++) {
                     if (node.containers[i].instance_type === 'digital_object') {
                         hasDigitalObject = true;
                     }
