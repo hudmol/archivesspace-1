@@ -5,32 +5,31 @@
   end
 %>
 
-<% if thumbnail = result.thumbnail %>
+<% if result.thumbnail_embed %>
   <%
     if defined?(thumbnail_link)
       same_window = true
     else
-      thumbnail_link = thumbnail.fetch('file_uri')
+      thumbnail_link = result.thumbnail_link.fetch('file_uri')
       same_window = false
     end
+
+    only_show_images = false unless defined?(only_show_images)
   %>
-  <% only_show_images = false unless defined?(only_show_images) %>
-  <% caption = thumbnail.fetch('caption', "Thumbnail for #{result.display_string}") %>
   <div class="pui-thumbnail">
-    <pre style="display: none"><%= thumbnail.pretty_inspect %></pre>
     <%= link_to thumbnail_link, :target => same_window ? '_self' : '_blank' do %>
-      <% if is_an_embeddable_image?(thumbnail) %>
-        <%= image_tag thumbnail.fetch('file_uri'), :alt => caption %>
+      <% if is_an_embeddable_image?(result.thumbnail_embed) %>
+        <%= image_tag result.thumbnail_embed.fetch('file_uri'), :alt => strip_mixed_content(result.thumbnail_caption) %>
       <% else %>
         <% if only_show_images %>
           <div class="pui-thumbnail-spacer"></div>
         <% else %>
-          <%= content_tag(:i, nil, {:title => caption, :class => 'pui-thumbnail-icon fa fa-th'}) %>
+          <%= content_tag(:i, nil, {:title => strip_mixed_content(result.thumbnail_caption), :class => 'pui-thumbnail-icon fa fa-th'}) %>
         <% end %>
       <% end %>
     <% end %>
-    <% if thumbnail.fetch('caption', false) %>
-      <div class="pui-thumbnail-caption"><%= thumbnail.fetch('caption') %></div>
+    <% if result.thumbnail_caption %>
+      <div class="pui-thumbnail-caption"><%= result.thumbnail_caption %></div>
     <% end %>
   </div>
 <% else %>

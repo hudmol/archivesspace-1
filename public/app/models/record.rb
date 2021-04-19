@@ -87,36 +87,52 @@ class Record
     Array(json['instances']).any?{|instance| instance['digital_object'] && instance.dig('digital_object', '_resolved', 'publish')}
   end
 
-  def thumbnail
-    file_version_candidates = []
+  def thumbnail_embed
+    return @thumbnail_embed if @thumbnail_embed
 
-    if ['resource', 'archival_object', 'accession'].include?(@primary_type)
-      Array(json['instances']).each do |instance|
-        if digital_object = instance.dig('digital_object', '_resolved')
-          # skip unpublished digital objects
-          next unless digital_object['publish']
+    file_version_candidates = fetch_file_versions
 
-          if instance['is_representative']
-            file_version_candidates = Array(digital_object['file_versions'])
-            break
-          else
-            file_version_candidates += Array(digital_object['file_versions'])
-          end
-        end
-      end
-    else
-      file_version_candidates = Array(json['file_versions'])
-    end
+    return nil if file_version_candidates.empty?
 
-    # drop unpublished file versions
-    file_version_candidates.reject!{|fv| !fv['publish'] }
+    result = file_version_candidates.detect{|fv| fv['use_statement'] == 'image-thumbnail'}
+    result ||= file_version_candidates.first
+
+    @thumbnail_embed = result
+  end
+
+  def thumbnail_link
+    return @thumbnail_link if @thumbnail_link
+
+    file_version_candidates = fetch_file_versions
 
     return nil if file_version_candidates.empty?
 
     result = file_version_candidates.detect{|fv| fv['is_representative']}
-    result ||= file_version_candidates.detect{|fv| fv['use_statement'] == 'image-thumbnail'}
+    result ||= file_version_candidates.detect{|fv| fv['use_statement'] != 'image-thumbnail' && fv['use_statement'] != 'embed'}
     result ||= file_version_candidates.first
-    result
+
+    @thumbnail_link = result
+  end
+
+  def thumbnail_caption
+    file_version_candidates = fetch_file_versions
+
+    return display_string if file_version_candidates.empty?
+
+    # 1. take the representative caption
+    if (representative = file_version_candidates.detect{|fv| fv['is_representative']})
+      if representative['caption']
+        return representative['caption']
+      end
+    end
+
+    # 2. otherwise take the embedded thumbnail caption
+    if (embed = thumbnail_embed) && embed['caption']
+      return embed['caption']
+    end
+
+    # 3. if all fails then take the record's title
+    display_string
   end
 
   private
@@ -552,4 +568,30 @@ class Record
     container_info
   end
 
+  def fetch_file_versions
+    return @file_version_candidates if @file_version_candidates
+
+    file_version_candidates = []
+
+    if ['resource', 'archival_object', 'accession'].include?(@primary_type)
+      Array(json['instances']).each do |instance|
+        if digital_object = instance.dig('digital_object', '_resolved')
+          # skip unpublished digital objects
+          next unless digital_object['publish']
+
+          if instance['is_representative']
+            file_version_candidates = Array(digital_object['file_versions'])
+            break
+          else
+            file_version_candidates += Array(digital_object['file_versions'])
+          end
+        end
+      end
+    else
+      file_version_candidates = Array(json['file_versions'])
+    end
+
+    # drop unpublished file versions and cache
+    @file_version_candidates = file_version_candidates.reject{|fv| !fv['publish'] }
+  end
 end
