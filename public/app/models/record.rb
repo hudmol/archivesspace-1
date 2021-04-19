@@ -95,6 +95,7 @@ class Record
     return nil if file_version_candidates.empty?
 
     result = file_version_candidates.detect{|fv| fv['use_statement'] == 'image-thumbnail'}
+    result ||= file_version_candidates.detect{|fv| fv['is_representative']}
     result ||= file_version_candidates.first
 
     @thumbnail_embed = result
