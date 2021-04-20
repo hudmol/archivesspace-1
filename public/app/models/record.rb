@@ -136,6 +136,19 @@ class Record
     display_string
   end
 
+  def iiif_manifest
+    return @iiif_embed if @iiif_embed
+
+    file_version_candidates = fetch_file_versions
+
+    @iiif_embed = file_version_candidates.detect do |fv|
+      fv['file_format_name'] == AppConfig['iiif_file_format_name'] &&
+        fv['use_statement'] == AppConfig['iiif_use_statement'] &&
+        fv['xlink_show_attribute'] == AppConfig['iiif_xlink_show_attribute']
+    end
+  end
+
+
   private
 
   def parse_full_title

@@ -18,7 +18,12 @@
       <span class='ref_id'>[<%=  t('archival_object._public.header.ref_id') %>: <%= @result['json']['ref_id'] %>]</span>
     <% end %>
 
-    <%= render partial: 'shared/thumbnail', locals: {result: @result} %>
+    <% if @result.iiif_manifest %>
+       <%= render partial: 'shared/iiif_embed', locals: {result: @result} %>
+    <% else %>
+      <%= render partial: 'shared/thumbnail', locals: {result: @result} %>
+    <% end %>
+
     <%= render partial: 'shared/record_innards' %>
     <%= render partial: 'shared/report_problem' %>
    </div>

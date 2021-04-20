@@ -21,7 +21,12 @@
 <div class="row" id="notes_row">
   <%# mdc: changing the BS layout from 9,3 to 8,4. %>
   <div class="col-sm-8">
-    <%= render partial: 'shared/thumbnail', locals: {result: @result} %>
+    <% if @result.iiif_manifest %>
+      <%= render partial: 'shared/iiif_embed', locals: {result: @result} %>
+    <% else %>
+      <%= render partial: 'shared/thumbnail', locals: {result: @result} %>
+    <% end %>
+
     <%= render partial: 'shared/record_innards' %>
     <%= render partial: 'shared/report_problem' %>
   </div>

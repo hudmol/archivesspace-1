@@ -74,4 +74,10 @@ module ThumbnailHelper
       :sortable => false, :class => 'thumbnail-col'
     )
   end
+
+  def iiif_manifest?(file_version)
+    file_version['file_format_name'] == AppConfig['iiif_file_format_name'] &&
+      file_version['use_statement'] == AppConfig['iiif_use_statement'] &&
+        file_version['xlink_show_attribute'] == AppConfig['iiif_xlink_show_attribute']
+  end
 end

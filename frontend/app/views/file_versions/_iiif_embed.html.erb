@@ -1,0 +1,11 @@
+<% if AppConfig.has_key?(:iiif_viewer_url) %>
+  <div class="iiif-embed">
+    <%= content_tag(:iframe, nil, {
+      :src => AppConfig[:iiif_viewer_url] + CGI::escape(manifest.fetch('file_uri')),
+      :class => 'universal-viewer-iframe',
+      :allow= => 'fullscreen',
+    }) %>
+  </div>
+<% else %>
+  <div class="alert alert-danger">AppConfig[:iiif_viewer_url] needs to be set to embed IIIF viewer</div>
+<% end %>

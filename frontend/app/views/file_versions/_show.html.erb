@@ -18,6 +18,9 @@
           </div>
         </div>
         <div id="<%= section_id %>_file_version_<%= index %>" class="accordion-body collapse">
+          <% if iiif_manifest?(file_version) %>
+            <%= render_aspace_partial :partial => "file_versions/iiif_embed", :locals => {:manifest => file_version} %>
+          <% end %>
           <%= render_aspace_partial :partial => "shared/content_and_thumbnail", :locals => {:record => file_version, content: capture { %>
             <div class="form-horizontal">
                 <%= render_aspace_partial :partial => "file_versions/file_uri", :locals => {:file_uri => uri_or_string( file_version['file_uri'] ) } %>
