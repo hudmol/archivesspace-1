@@ -31,7 +31,9 @@ class Search
       set_writer_type( params[:dt] || "json" )
 
     query.remove_csv_header if ( params[:dt] == "csv" and params[:no_csv_header] )
-    query.limit_fields_to(params[:fields]) if params[:fields] && AppConfig[:limit_csv_fields]
+    if AppConfig[:limit_csv_fields] === true
+      query.limit_fields_to(params[:fields]) if params[:fields]
+    end
 
     results = Solr.search(query)
 
@@ -167,7 +169,40 @@ class Search
     end
   end
 
-  def self.search_csv( params, repo_id )
+  def self.search_csv(params, repo_id)
+    if AppConfig[:search_csv_beta]
+      search_csv_beta(params, repo_id)
+    else
+      search_csv_solr(params, repo_id)
+    end
+  end
+
+  def self.search_csv_beta(params, repo_id)
+    csv = SearchCSVStream.new
+
+    page = 1
+
+    loop do
+      hits = search(params.merge(:dt => 'json', :page => page, :page_size => 200), repo_id)
+      break if hits.fetch('results', []).empty?
+
+      hits.fetch('results').each do |result|
+        r = ASUtils.json_parse(result.fetch('json'))
+
+        csv << r
+      end
+
+      page += 1
+    end
+
+    Enumerator.new do |y|
+      csv.to_csv do |chunk|
+        y << chunk
+      end
+    end
+  end
+
+  def self.search_csv_solr( params, repo_id )
     # first let's get a json response with the number of pages
     p = params.dup
     p[:dt] = "json"

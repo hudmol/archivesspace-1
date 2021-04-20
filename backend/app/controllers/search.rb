@@ -127,7 +127,11 @@ class ArchivesSpaceService < Sinatra::Base
     .paginated(true)
     .returns([200, ""]) \
   do
-    json_response(Search.search(params.merge(:type => ['subject']), nil))
+    if params[:dt] && params[:dt] == "csv"
+      stream_response(Search.search_csv(params.merge(:type => ['subject']), nil), "text/csv")
+    else
+      json_response(Search.search(params.merge(:type => ['subject']), nil))
+    end
   end
 
 

@@ -65,11 +65,12 @@ class SearchController < ApplicationController
         @search_data = Search.all(session[:repo_id], params_for_backend_search.merge({"facet[]" => SearchResultData.BASE_FACETS.concat(params[:facets]||[]).uniq}))
         @display_identifier = params[:display_identifier] ? params[:display_identifier] : false
       }
-      format.csv { 
+      format.csv {
         criteria = params_for_backend_search.merge({"facet[]" => SearchResultData.BASE_FACETS})
+
         uri = "/repositories/#{session[:repo_id]}/search"
         csv_response( uri, criteria )
-      }  
+      }
     end
   end
 
