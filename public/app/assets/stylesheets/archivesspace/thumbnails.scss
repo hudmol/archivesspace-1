@@ -30,15 +30,25 @@
   .recordrow {
     display: flex;
   }
+  .pui-thumbnail {
+    flex-shrink: 0;
+    flex-grow: 0;
+    flex: 0 0 84px;
+  }
+  .pui-thumbnail-spacer {
+    flex-shrink: 0;
+    flex-grow: 0;
+    flex: 0 0 84px;
+  }
+}
 
+.infinite-item,
+.search-results {
   .pui-thumbnail {
     float: none;
     border: none;
     min-width: initial;
     margin: 0;
-    flex-shrink: 0;
-    flex-grow: 0;
-    flex: 0 0 84px;
 
     img {
       object-fit: cover;
@@ -51,10 +61,10 @@
       display: none;
     }
   }
+}
 
-  .pui-thumbnail-spacer {
-    flex-shrink: 0;
-    flex-grow: 0;
-    flex: 0 0 84px;
+.infinite-item {
+  .pui-thumbnail {
+    display: inline-block;
   }
 }
