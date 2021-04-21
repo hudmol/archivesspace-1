@@ -148,11 +148,13 @@ class SearchCSVStream
 
 
   def exclude_property?(prop)
-    EXCLUDED_PROPERTIES.include?(prop)
+    @extra_excluded_properties ||= Set.new(AppConfig[:search_csv_extra_excluded_properties])
+
+    EXCLUDED_PROPERTIES.include?(prop) || @extra_excluded_properties.include?(prop)
   end
 
   def nested_records
-    HANDLE_NESTED_RECORDS
+    HANDLE_NESTED_RECORDS + AppConfig[:search_csv_extra_nested_records]
   end
 
   def extract_scalar_properties(r)

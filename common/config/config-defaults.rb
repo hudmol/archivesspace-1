@@ -686,3 +686,6 @@ AppConfig['iiif_use_statement'] = 'text-json'
 AppConfig['iiif_xlink_show_attribute'] = 'embed'
 
 AppConfig[:search_csv_beta] = true
+AppConfig[:search_csv_class] = 'SearchCSVStream'
+AppConfig[:search_csv_extra_nested_records] = []
+AppConfig[:search_csv_extra_excluded_properties] = []

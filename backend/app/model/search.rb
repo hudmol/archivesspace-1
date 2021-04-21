@@ -178,24 +178,26 @@ class Search
   end
 
   def self.search_csv_beta(params, repo_id)
-    csv = SearchCSVStream.new
-
-    page = 1
-
-    loop do
-      hits = search(params.merge(:dt => 'json', :page => page, :page_size => 200), repo_id)
-      break if hits.fetch('results', []).empty?
-
-      hits.fetch('results').each do |result|
-        r = ASUtils.json_parse(result.fetch('json'))
-
-        csv << r
-      end
-
-      page += 1
-    end
+    csv_clz = Kernel.const_get(AppConfig[:search_csv_class].intern)
 
     Enumerator.new do |y|
+      csv = csv_clz.new
+
+      page = 1
+
+      loop do
+        hits = search(params.merge(:dt => 'json', :page => page, :page_size => 200), repo_id)
+        break if hits.fetch('results', []).empty?
+
+        hits.fetch('results').each do |result|
+          r = ASUtils.json_parse(result.fetch('json'))
+
+          csv << r
+        end
+
+        page += 1
+      end
+
       csv.to_csv do |chunk|
         y << chunk
       end
