@@ -107,6 +107,12 @@ class SearchCSVStream
   end
 
   def extract_properties(r)
+    result = extract_properties_with_custom_extractor(r)
+
+    result || extract_scalar_properties(r)
+  end
+
+  def extract_properties_with_custom_extractor(r)
     jsonmodel_type = nil
 
     extractor_description = nil
@@ -122,7 +128,7 @@ class SearchCSVStream
     if extractor = extract_properties_for_type(extractor_description)
       self.send(extractor, r)
     else
-      extract_scalar_properties(r)
+      nil
     end
   end
 
@@ -163,7 +169,7 @@ class SearchCSVStream
     # Treat refs specially here, flattening them out.
     r.each do |k, v|
       if !exclude_property?(k) && v.is_a?(Hash) && v['ref']
-        v.each do |ref_key, ref_val|
+        (extract_properties_with_custom_extractor(v) || v).each do |ref_key, ref_val|
           next if exclude_property?(ref_key)
           result["#{k}::#{ref_key}"] = ref_val
         end
