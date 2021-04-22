@@ -3,7 +3,7 @@
     <%= content_tag(:iframe, nil, {
       :src => AppConfig[:iiif_viewer_url] + CGI::escape(result.iiif_manifest.fetch('file_uri')),
       :class => 'universal-viewer-iframe',
-      :allow= => 'fullscreen',
+      :allow => 'fullscreen',
     }) %>
   </div>
 <% else %>
