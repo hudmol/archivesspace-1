@@ -184,13 +184,20 @@ class SearchCSVStream
 
     mapped = extract_properties(r)
 
+    max_nested = AppConfig[:search_csv_max_nested_records]
+
     self.nested_records.each do |property|
       ASUtils.wrap(r.fetch(property, [])).each_with_index do |nested, idx|
         next unless nested.is_a?(Hash)
+        next if idx > max_nested
 
         mapped_nested = map_record(nested)
 
         mapped_nested.each do |k, v|
+          if idx == max_nested
+            v = "MAX_NESTED_RECORDS_REACHED"
+          end
+
           mapped["#{property}::#{idx}::#{k}"] = v
         end
       end
