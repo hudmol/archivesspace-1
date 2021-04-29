@@ -4,7 +4,10 @@
       <%= content %>
     </div>
     <div class="col-sm-3">
-      <%= render_aspace_partial :partial => "digital_objects/thumbnail_for_file_version", :locals => {:file_version => fetch_thumbnail(record)} %>
+      <%= render_aspace_partial :partial => "digital_objects/thumbnail_for_file_version", :locals => {
+        :file_version => fetch_thumbnail(record),
+        :caption => caption_for_thumbnail(record),
+      } %>
     </div>
   </div>
 <% else %>
