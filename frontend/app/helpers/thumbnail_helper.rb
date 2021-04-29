@@ -105,6 +105,22 @@ module ThumbnailHelper
     fallback_title
   end
 
+  def link_for_thumbnail(record, fallback_link = nil)
+    file_version_candidates = fetch_file_versions(record)
+
+    return fallback_link if file_version_candidates.empty?
+
+    result = file_version_candidates.detect{|fv| fv['is_representative']}
+    result ||= file_version_candidates.detect{|fv| fv['use_statement'] != 'image-thumbnail' && fv['use_statement'] != 'embed'}
+    result ||= file_version_candidates.first
+
+    if result
+      result['file_uri']
+    else
+      fallback_link
+    end
+  end
+
 
   def digital_objects_in_search_results?
     @search_data && @search_data.results? && @search_data['results'].any? do |result|
@@ -121,8 +137,9 @@ module ThumbnailHelper
         json = ASUtils.json_parse(record['json'])
         if thumbnail_available?(json)
           render_aspace_partial(:partial => "digital_objects/thumbnail_for_file_version", :locals => {
-            :file_version => fetch_thumbnail(json),
+            :file_version => thumbnail = fetch_thumbnail(json),
             :caption => caption_for_thumbnail(json, json['title'] || json['display_string'] || 'Thumbnail'),
+            :link_uri => url_for(:controller => :resolver, :action => :resolve_readonly, :uri => json['uri'])
           })
         end
       },

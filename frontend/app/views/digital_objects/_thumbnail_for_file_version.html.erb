@@ -2,10 +2,11 @@
 
 <%
   caption = file_version.fetch('caption', 'Thumbnail') unless defined?(caption)
+  link_uri = file_version.fetch('file_uri') unless defined?(link_uri)
 %>
 
 <div class="digital-object-thumbnail">
-  <%= link_to file_version.fetch('file_uri'), :target => '_blank' do %>
+  <%= link_to link_uri, :target => '_blank' do %>
     <% if file_version_is_image?(file_version) %>
       <%= image_tag file_version.fetch('file_uri'), :alt => caption %>
     <% else %>

@@ -7,6 +7,7 @@
       <%= render_aspace_partial :partial => "digital_objects/thumbnail_for_file_version", :locals => {
         :file_version => fetch_thumbnail(record),
         :caption => caption_for_thumbnail(record),
+        :link_uri => link_for_thumbnail(record),
       } %>
     </div>
   </div>
