@@ -124,15 +124,28 @@ class Record
     if (representative = file_version_candidates.detect{|fv| fv['is_representative']})
       if representative['caption']
         return representative['caption']
+      elsif (digital_object_title = representative.dig('_digital_object', 'title'))
+        return digital_object_title
       end
     end
 
-    # 2. otherwise take the embedded thumbnail caption
-    if (embed = thumbnail_embed) && embed['caption']
-      return embed['caption']
+    # 2. otherwise take the embedded thumbnail caption or digital object title
+    if (embed = thumbnail_embed)
+      if embed['caption']
+        return embed['caption']
+      elsif (digital_object_title = embed.dig('_digital_object', 'title'))
+        return digital_object_title
+      end
     end
 
-    # 3. if all fails then take the record's title
+    # 3. ok.. take the first digital object's title
+    file_version_candidates.each do |fv|
+      if (digital_object_title = fv.dig('_digital_object', 'title'))
+        return digital_object_title
+      end
+    end
+
+    # 4. if all fails then take the current record's title
     display_string
   end
 
@@ -589,15 +602,15 @@ class Record
 
     if ['resource', 'archival_object', 'accession'].include?(@primary_type)
       Array(json['instances']).each do |instance|
-        if digital_object = instance.dig('digital_object', '_resolved')
+        if (digital_object = instance.dig('digital_object', '_resolved'))
           # skip unpublished digital objects
           next unless digital_object['publish']
 
           if instance['is_representative']
-            file_version_candidates = Array(digital_object['file_versions'])
+            file_version_candidates = Array(digital_object['file_versions']).map{|fv| fv['_digital_object'] = digital_object; fv}
             break
           else
-            file_version_candidates += Array(digital_object['file_versions'])
+            file_version_candidates += Array(digital_object['file_versions']).map{|fv| fv['_digital_object'] = digital_object; fv}
           end
         end
       end
