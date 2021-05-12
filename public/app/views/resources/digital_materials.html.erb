@@ -16,7 +16,7 @@
 <%= render partial: 'resources/resource_alltabs' %>
 
 <div class="row">
-  <div class="col-sm-9">
+  <div class="col-sm-9 search-results">
     <% unless @results.blank? || @results['total_hits'] == 0 %>
       <% @results.records.each do |result| %>
         <%= render partial: 'shared/result', locals: {:result => result, :props => {:full => false}} %>
