@@ -317,6 +317,30 @@ en:
       sheets: Sheets
       terabytes: Terabytes
       volumes: Volumes
+      minutes: Minutes
+      hours: Hours
+      centimetres: Centimetres
+      metres: Metres
+      electronic_files: Electronic Files
+      pistol: Pistol
+      medal_ribbons: Medal Ribbons
+      albums: Albums
+      microcassette: Microcassette
+      video_file: Video File
+      video_recording: Video Recording
+      video_cassette: Video Cassette
+      wrapped_parcel: Wrapped Parcel
+      postcard: Postcard
+      artwork: Artwork
+      dvd: DVD
+      type_2_box: Type 2 Box
+      small_box: Small Box
+      digital_photographs: Digital Photographs
+      sound recordings: Sound Recordings
+      artefacts: Artefacts
+      badges: Badges
+      plans: Plans
+      unknown: Uknown
     collection_management_processing_priority:
       none: Not specified
       high: High
@@ -416,6 +440,21 @@ en:
       moving_images: Moving Images
       realia: Realia
       text: Text
+      computer_file: Computer File
+      game_toy: "Game/Toy"
+      sheet_music: Sheet Music
+      scrapbook: Scrapbook
+      spoken_sound: Spoken Sound
+      digital_photograph: Digital Photograph
+      photograph: Photograph
+      plan: Plan
+      artwork: Artwork
+      manuscript: Manuscript
+      poster: Poster
+      music_sound: Music Sound
+      theatre_program: Theatre Program
+      video_dvd: "Video/DVD"
+      ephemera: Ephemera
     accession_acquisition_type:
       deposit: Deposit
       gift: Gift
@@ -1247,6 +1286,9 @@ en:
       pdf: Portable Document Format
       tiff: Tagged Image File Format
       txt: Plain Text File
+      mp4: MPEG-4 Part 14 (MP4)
+      msword: Microsoft Word
+      unknown: Uknown
     location_temporary:
       conservation: Conservation
       exhibit: Exhibit
