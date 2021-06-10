@@ -21,6 +21,7 @@ class DigitalObject < Sequel::Model(:digital_object)
   include Events
   include Publishable
   include Assessments::LinkedRecord
+  include RestrictionCalculator
 
   enable_suppression
 

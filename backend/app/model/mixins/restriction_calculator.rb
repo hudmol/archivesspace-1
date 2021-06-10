@@ -11,18 +11,40 @@ module RestrictionCalculator
     models_supporting_rights_restrictions.map {|model|
       instance_link_column = model.association_reflection(:instance)[:key]
 
-      id_set = TopContainer.linked_instance_ds.
-               filter(:top_container__id => self.id).
-               where { Sequel.~(instance_link_column => nil) }.
-               select(instance_link_column).
-               map {|row| row[instance_link_column]}
+      id_set = []
 
-      model_to_record_ids = Implementation.expand_to_tree(model, id_set)
+      if self.is_a?(TopContainer)
+        id_set = TopContainer.linked_instance_ds.
+                   filter(:top_container__id => self.id).
+                   where { Sequel.~(instance_link_column => nil) }.
+                   select(instance_link_column).
+                   map {|row| row[instance_link_column]}
+      elsif self.is_a?(DigitalObject)
+        DB.open do |db|
+          id_set = db[:instance]
+                     .join(:instance_do_link_rlshp, :instance_do_link_rlshp__instance_id => :instance__id)
+                     .filter(:instance_do_link_rlshp__digital_object_id => self.id)
+                     .select(Sequel.qualify(:instance, instance_link_column))
+                     .map {|row| row[instance_link_column]}
+        end
+      elsif self.is_a?(ArchivalObject) || self.is_a?(Resource)
+        if self.is_a?(model) # check for restrictions on this record
+          id_set = [self.id]
+        end
+      else
+        raise "RestrictionCalculator not supported on #{self.class}"
+      end
 
-      model_to_record_ids.map {|restriction_model, restriction_ids|
-        restriction_link_column = restriction_model.association_reflection(:rights_restriction)[:key]
-        RightsRestriction.filter(restriction_link_column => restriction_ids).all
-      }
+      if id_set.empty?
+        []
+      else
+        model_to_record_ids = Implementation.expand_to_tree(model, id_set)
+
+        model_to_record_ids.map {|restriction_model, restriction_ids|
+          restriction_link_column = restriction_model.association_reflection(:rights_restriction)[:key]
+          RightsRestriction.filter(restriction_link_column => restriction_ids).all
+        }
+      end
     }.flatten.uniq(&:id)
   end
 

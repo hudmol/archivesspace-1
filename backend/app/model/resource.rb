@@ -30,6 +30,7 @@ class Resource < Sequel::Model(:resource)
   include RepresentativeImages
   include Assessments::LinkedRecord
   include HasDigitalObjects
+  include RestrictionCalculator
 
   enable_suppression
 

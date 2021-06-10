@@ -109,6 +109,16 @@
         "readonly" => true,
       },
 
+      "restricted" => {
+        "type" => "boolean",
+        "readonly" => "true"
+      },
+
+      "active_restrictions" => {
+        "type" => "array",
+        "readonly" => "true",
+        "items" => {"type" => "JSONModel(:rights_restriction) object"},
+      },
     },
   },
 }

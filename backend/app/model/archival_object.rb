@@ -24,6 +24,7 @@ class ArchivalObject < Sequel::Model(:archival_object)
   include Publishable
   include ReindexTopContainers
   include RightsRestrictionNotes
+  include RestrictionCalculator
   include RepresentativeImages
   include Assessments::LinkedRecord
   include TouchRecords

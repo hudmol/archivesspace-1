@@ -1515,3 +1515,5 @@ en:
         _plural: Sponsor Sets
       repo_settings:
         _plural: Per Repository OAI-PMH Settings
+  active_restrictions:
+    _plural: Active Restrictions

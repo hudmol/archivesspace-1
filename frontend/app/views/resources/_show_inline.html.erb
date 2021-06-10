@@ -125,6 +125,8 @@
 
         <%= render_aspace_partial :partial => "assessments/embedded", :locals => { :record => @resource, :filter_term => {"assessment_record_uris" => @resource.uri}.to_json, :heading_text => I18n.t("assessment._frontend.linked_records.linked_via_assessment_records")} %>
 
+        <%= render_aspace_partial :partial => "restriction_calculator/summary", :locals => {:record => @resource} %>
+
         <%= show_plugins_for(@resource, readonly) %>
 
       <% end %>

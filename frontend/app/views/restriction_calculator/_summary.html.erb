@@ -1,0 +1,48 @@
+<section id="rights_restrictions" class="subrecord-form-dummy">
+  <h3 class="subrecord-form-heading"><%= I18n.t("top_container._frontend.section.active_restrictions") %></h3>
+  <div class="subrecord-form-container">
+    <div class="subrecord-form-fields">
+      <% if record["active_restrictions"].length > 0 %>
+        <table class="table table-bordered table-striped">
+          <thead>
+          <tr>
+            <th><%= I18n.t("rights_restriction.linked_records") %></th>
+            <th><%= I18n.t("rights_restriction.restriction_note_type") %></th>
+            <th><%= I18n.t("rights_restriction.begin") %></th>
+            <th><%= I18n.t("rights_restriction.end") %></th>
+            <th><%= I18n.t("rights_restriction.local_access_restriction_type") %></th>
+          </tr>
+          </thead>
+          <tbody>
+          <% record["active_restrictions"].each do |restriction| %>
+            <tr>
+              <td>
+                <div class="token-list">
+                  <%= render_token :object => restriction["linked_records"]["_resolved"],
+                                   :label => restriction["linked_records"]["_resolved"]["title"],
+                                   :type => restriction["linked_records"]["_resolved"]["jsonmodel_type"],
+                                   :uri => restriction["linked_records"]["ref"] %>
+                </div>
+              </td>
+              <td><%= I18n.t("enumerations.note_multipart_type.#{restriction["restriction_note_type"]}", restriction["restriction_note_type"]) %></td>
+              <td><%= restriction["begin"] %></td>
+              <td><%= restriction["end"] %></td>
+              <td>
+                <ul>
+                  <% Array.wrap(restriction["local_access_restriction_type"]).
+                    map{|type| I18n.t("enumerations.restriction_type.#{type}",type)}.
+                    sort.each do |type| %>
+                    <li><%= type %></li>
+                  <% end %>
+                </ul>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <div class="alert alert-info"><%= I18n.t("top_container._frontend.messages.no_active_restrictions") %></div>
+      <% end %>
+    </div>
+  </div>
+</section>
