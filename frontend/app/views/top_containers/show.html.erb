@@ -36,25 +36,22 @@
           <%= readonly.label_and_textarea "ils_item_id" %>
           <%= readonly.label_and_textarea "exported_to_ils", :default => I18n.t("top_container.not_exported") %>
 
+            <% if @top_container["container_locations"].length > 0 %>
+              <section>
+                <%= render_aspace_partial :partial => "container_locations/show", :locals => { :container_locations => @top_container["container_locations"] } %>
+              </section>
+            <% end %>
 
-
-          <% if @top_container["container_locations"].length > 0 %>
-            <hr>
-            <section>
-              <%= render_aspace_partial :partial => "container_locations/show", :locals => { :container_locations => @top_container["container_locations"] } %>
-            </section>
-          <% end %>
-
-          <%= render_aspace_partial :partial => "restriction_calculator/summary", :locals => {:record => @top_container} %>
-
-          <%= render_aspace_partial :partial => "search/embedded", :locals => {:record => @top_container, :filter_term => {"top_container_uri_u_sstr" => @top_container.uri}.to_json, :heading_text => I18n.t("location._frontend.section.search_embedded")} %>
-
-          <hr>
           <%= display_audit_info(@top_container) %>
         <% end %>
 
         <% readonly.emit_template("top_container") %>
       <% end %>
+      </section>
+
+      <%= render_aspace_partial :partial => "restriction_calculator/summary", :locals => {:record => @top_container} %>
+
+      <%= render_aspace_partial :partial => "search/embedded", :locals => {:record => @top_container, :filter_term => {"top_container_uri_u_sstr" => @top_container.uri}.to_json, :heading_text => I18n.t("location._frontend.section.search_embedded")} %>
     </div>
   </div>
 </div>
