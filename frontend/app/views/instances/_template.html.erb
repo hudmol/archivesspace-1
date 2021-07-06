@@ -23,7 +23,12 @@
 <% define_template "instance_digital_object", jsonmodel_definition(:instance) do |form| %>
   <div class="subrecord-form-fields">
     <h3 class="subrecord-form-heading">
-      <span class="badge badge-info is-representative-label"><%= I18n.t("file_version.is_representative") %></span>
+      <span class="badge badge-info is-representative-label">
+        <%= I18n.t("file_version.is_representative") %>
+        <button class="btn btn-link is-representative-toggle cancel-representative" aria-label="Toggle representative">
+          <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
+        </button>
+      </span>
       <button class="btn btn-small is-representative-toggle"><%= I18n.t("file_version._frontend.action.make_representative") %></button>
     </h3>
     <div class="subrecord-form-container">

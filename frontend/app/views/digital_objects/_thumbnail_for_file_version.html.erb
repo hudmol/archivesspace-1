@@ -1,14 +1,14 @@
-<% if defined?(:file_version) && !file_version.nil? %>
-
 <%
-  caption = file_version.fetch('caption', 'Thumbnail') unless defined?(caption)
-  link_uri = file_version.fetch('file_uri') unless defined?(link_uri)
+  thumbnail = {} unless defined?(:thumbnail) || thumbnail.nil?
+  caption = thumbnail.fetch('caption', 'Thumbnail') unless defined?(caption) || caption.nil?
+  link_uri = thumbnail.fetch('file_uri', nil) unless defined?(link_uri) || link_uri.nil?
 %>
 
+<% unless thumbnail.nil? && link_uri.nil? %>
 <div class="digital-object-thumbnail">
   <%= link_to link_uri, :target => '_blank' do %>
-    <% if file_version_is_image?(file_version) %>
-      <%= image_tag file_version.fetch('file_uri'), :alt => caption %>
+    <% if file_version_is_image?(thumbnail) %>
+      <%= image_tag thumbnail.fetch('file_uri'), :alt => caption %>
     <% else %>
       <%= content_tag(:i, nil, {:title => caption, :class => 'digital-object-thumbnail-icon glyphicon glyphicon-open-file'}) %>
     <% end %>

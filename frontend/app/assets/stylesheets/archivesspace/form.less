@@ -750,6 +750,7 @@ label {
 // Name form styles
 .is-authoritive-label,
 .is-display-name-label,
+.is-thumbnail-label,
 .is-representative-label {
   display: none;
 }
@@ -773,9 +774,45 @@ label {
 .is-representative {
   .is-representative-label {
     display: inline;
+    vertical-align: middle;
+
+    .is-representative-toggle {
+      display: inline;
+      padding: 0 0 0 8px;
+      color: #CCC;
+    }
   }
   .is-representative-toggle {
     display: none;
+  }
+}
+
+.is-thumbnail {
+  .is-thumbnail-label {
+    display: inline;
+    vertical-align: middle;
+
+    .cancel-thumbnail {
+      display: inline;
+      padding: 0 0 0 8px;
+      color: #CCC;
+    }
+  }
+  .is-thumbnail-toggle {
+    display: none;
+  }
+}
+
+.readonly-context {
+  #digital_object_file_versions_ {
+    .panel-default > .panel-heading .badge {
+      &.badge-info {
+        background-color: #337ab7;
+      }
+      &.badge-success {
+        background-color: #5cb85c;
+      }
+    }
   }
 }
 

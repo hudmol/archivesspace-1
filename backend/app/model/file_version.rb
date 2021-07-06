@@ -10,6 +10,7 @@ class FileVersion < Sequel::Model(:file_version)
     super
 
     self.is_representative = nil if self.is_representative != 1
+    self.is_display_thumbnail = nil unless self.is_display_thumbnail == 1
   end
 
 
@@ -19,6 +20,12 @@ class FileVersion < Sequel::Model(:file_version)
                        :message => "A digital object can only have one representative file version")
       map_validation_to_json_property([:is_representative, :digital_object_id], :is_representative)
 
+    end
+
+    if is_display_thumbnail
+      validates_unique([:is_display_thumbnail, :digital_object_id],
+                       :message => "A digital object can only have one display thumbnail file version")
+      map_validation_to_json_property([:is_display_thumbnail, :digital_object_id], :is_display_thumbnail)
     end
 
     super

@@ -1,22 +1,21 @@
 module ThumbnailHelper
   def thumbnail_available?(record)
-    file_versions = fetch_file_versions(record)
+    file_versions = fetch_candidate_file_versions(record)
 
-    !file_versions.empty?
+    find_representative(file_versions) || find_thumbnail_file_version(file_versions)
   end
 
-  def fetch_representative(file_versions)
-    file_versions.detect{|fv| !!fv['is_representative']}
+  def find_representative(file_versions)
+    ASUtils.wrap(file_versions).detect{|fv| !!fv['is_representative']}
   end
 
   def fetch_thumbnail(record)
-    find_thumbnail_file_version(fetch_file_versions(record))
+    find_thumbnail_file_version(fetch_candidate_file_versions(record))
   end
 
   def find_thumbnail_file_version(file_versions)
-    fetch_representative(file_versions) ||
-      ASUtils.wrap(file_versions).detect{|fv| fv['use_statement'] == 'image-thumbnail'} ||
-      ASUtils.wrap(file_versions).first
+      ASUtils.wrap(file_versions).detect{|fv| !!fv['is_display_thumbnail']} ||
+        ASUtils.wrap(file_versions).detect{|fv| fv['use_statement'] == 'image-thumbnail'}
   end
 
   def file_version_is_image?(file_version)
@@ -32,7 +31,7 @@ module ThumbnailHelper
     end
   end
 
-  def fetch_file_versions(record)
+  def fetch_candidate_file_versions(record)
     result = []
 
 
@@ -42,6 +41,8 @@ module ThumbnailHelper
           if instance['is_representative']
             return ASUtils.wrap(instance['digital_object']['_resolved']['file_versions']).map{|fv|
               fv.clone
+            }.select{|fv|
+              fv['publish']
             }.map {|fv|
               fv['_digital_object_title'] = instance['digital_object']['_resolved']['title']
               fv
@@ -49,6 +50,8 @@ module ThumbnailHelper
           else
             result += ASUtils.wrap(instance['digital_object']['_resolved']['file_versions']).map{|fv|
               fv.clone
+            }.select{|fv|
+              fv['publish']
             }.map {|fv|
               fv['_digital_object_title'] = instance['digital_object']['_resolved']['title']
               fv
@@ -59,6 +62,8 @@ module ThumbnailHelper
     elsif record['file_versions']
       result = ASUtils.wrap(record['file_versions']).map{|fv|
         fv.clone
+      }.select{|fv|
+        fv['publish']
       }.map {|fv|
         fv['_digital_object_title'] = record['title']
         fv
@@ -72,7 +77,7 @@ module ThumbnailHelper
 
 
   def caption_for_thumbnail(record, fallback_title = 'Thumbnail')
-    file_version_candidates = fetch_file_versions(record)
+    file_version_candidates = fetch_candidate_file_versions(record)
 
     return fallback_title if file_version_candidates.empty?
 
@@ -106,11 +111,11 @@ module ThumbnailHelper
   end
 
   def link_for_thumbnail(record, fallback_link = nil)
-    file_version_candidates = fetch_file_versions(record)
+    file_version_candidates = fetch_candidate_file_versions(record)
 
     return fallback_link if file_version_candidates.empty?
 
-    result = file_version_candidates.detect{|fv| fv['is_representative']}
+    result = find_representative(file_version_candidates)
     result ||= file_version_candidates.detect{|fv| fv['use_statement'] != 'image-thumbnail' && fv['use_statement'] != 'embed'}
     result ||= file_version_candidates.first
 
@@ -137,7 +142,7 @@ module ThumbnailHelper
         json = ASUtils.json_parse(record['json'])
         if thumbnail_available?(json)
           render_aspace_partial(:partial => "digital_objects/thumbnail_for_file_version", :locals => {
-            :file_version => thumbnail = fetch_thumbnail(json),
+            :thumbnail => fetch_thumbnail(json),
             :caption => caption_for_thumbnail(json, json['title'] || json['display_string'] || 'Thumbnail'),
             :link_uri => url_for(:controller => :resolver, :action => :resolve_readonly, :uri => json['uri'])
           })

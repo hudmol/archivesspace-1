@@ -17,6 +17,9 @@
     font-size: 50px;
   }
 
+  .pui-thumbnail-help-text {
+  }
+
   .pui-thumbnail-caption {
     background: #EEE;
     padding: 10px;
@@ -58,6 +61,10 @@
     }
 
     .pui-thumbnail-caption {
+      display: none;
+    }
+
+    .pui-thumbnail-help-text {
       display: none;
     }
   }

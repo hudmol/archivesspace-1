@@ -90,13 +90,10 @@ class Record
   def thumbnail_embed
     return @thumbnail_embed if @thumbnail_embed
 
-    file_version_candidates = fetch_file_versions
+    file_version_candidates = fetch_candidate_file_versions
 
-    return nil if file_version_candidates.empty?
-
-    result = file_version_candidates.detect{|fv| fv['use_statement'] == 'image-thumbnail'}
-    result ||= file_version_candidates.detect{|fv| fv['is_representative']}
-    result ||= file_version_candidates.first
+    result = file_version_candidates.detect{|fv| fv['is_display_thumbnail']}
+    result ||= file_version_candidates.detect{|fv| fv['use_statement'] == 'image-thumbnail'}
 
     @thumbnail_embed = result
   end
@@ -104,9 +101,7 @@ class Record
   def thumbnail_link
     return @thumbnail_link if @thumbnail_link
 
-    file_version_candidates = fetch_file_versions
-
-    return nil if file_version_candidates.empty?
+    file_version_candidates = fetch_candidate_file_versions
 
     result = file_version_candidates.detect{|fv| fv['is_representative']}
     result ||= file_version_candidates.detect{|fv| fv['use_statement'] != 'image-thumbnail' && fv['use_statement'] != 'embed'}
@@ -116,7 +111,7 @@ class Record
   end
 
   def thumbnail_caption
-    file_version_candidates = fetch_file_versions
+    file_version_candidates = fetch_candidate_file_versions
 
     return display_string if file_version_candidates.empty?
 
@@ -152,7 +147,7 @@ class Record
   def iiif_manifest
     return @iiif_embed if @iiif_embed
 
-    file_version_candidates = fetch_file_versions
+    file_version_candidates = fetch_candidate_file_versions
 
     @iiif_embed = file_version_candidates.detect do |fv|
       fv['file_format_name'] == AppConfig['iiif_file_format_name'] &&
@@ -595,7 +590,7 @@ class Record
     container_info
   end
 
-  def fetch_file_versions
+  def fetch_candidate_file_versions
     return @file_version_candidates if @file_version_candidates
 
     file_version_candidates = []
