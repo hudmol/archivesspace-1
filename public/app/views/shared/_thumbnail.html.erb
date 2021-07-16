@@ -5,8 +5,7 @@
       thumbnail.fetch('file_uri').start_with?('http')
   end
 
-  if defined?(thumbnail_link)
-    thumbnail_link = nil
+  if defined?(thumbnail_link) && thumbnail_link
     same_window = true
   else
     thumbnail_link = result.thumbnail_link ? result.thumbnail_link.fetch('file_uri', nil) : nil
